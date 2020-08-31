@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="stividor-knot.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg4393"
+   version="1.1"
+   viewBox="0 0 210 297"
+   height="297mm"
+   width="210mm">
+  <defs
+     id="defs4387" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-8"
+     inkscape:window-x="-8"
+     inkscape:window-height="1018"
+     inkscape:window-width="1920"
+     inkscape:snap-grids="true"
+     showgrid="true"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="134.97384"
+     inkscape:cx="382.52911"
+     inkscape:zoom="3.959798"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base">
+    <inkscape:grid
+       id="grid4962"
+       type="xygrid" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata4390">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Слой 1">
+    <path
+       id="path3750"
+       style="fill:none;stroke:#000000;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 58,46 c 3.417554,0.0084 7.578157,0.208958 11.978423,0.04922 C 73.937128,45.905506 77,52 80,52 c 3,0 7,-6 10.005665,-5.921387 l 20.067625,0.04929 c 9.99997,0.02456 10,-17.000001 0,-17.000001 C 104.65884,29.127902 95,52 89.972678,51.99897 87,51.99836 83,46 80,46 77,46 73.000233,51.924041 69.976181,51.952753 65,52 62.999991,35 72.999991,35 c 10,0 27.073299,-0.05422 37.048269,0.01845 l 15.02503,0.109456"
+       sodipodi:nodetypes="cszcssszszsc" />
+  </g>
+</svg>

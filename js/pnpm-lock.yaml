@@ -1,0 +1,5 @@
+dependencies:
+  '@grunmouse/math-vector': 'link:../../math-vector'
+lockfileVersion: 5.1
+specifiers:
+  '@grunmouse/math-vector': 'link:..\..\math-vector'
