@@ -28,6 +28,15 @@ class NodeOfCurve{
 		return N.sub(d);		
 	}
 	
+	productNode(N, s){
+		let {A, V} = this;
+		N = N || A;
+		let B = this.product(N, s);
+		let node = new NodeOfCurve(N, B);
+		this.connect(node);
+		return node;
+	}
+	
 	connect(node){
 		this.sibling = node;
 		node.sibling = this;

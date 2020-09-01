@@ -1,4 +1,4 @@
-const SimpleOverhandKnot = require('./simple-overhand-knot.js');
+const SimpleOverhandKnot = require('./knots/simple-overhand-knot.js');
 const {Vector2} = require('@grunmouse/math-vector');
 const fsp = require('fs').promises;
 

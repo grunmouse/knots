@@ -2,10 +2,23 @@ const Node = require('./node-of-curve.js');
 
 class LineSegment {
 	constructor(A, B){
+		let nodeA;
+		if(A instanceof Node){
+			if(A.segment){
+				nodeA.productNode(0, B);
+			}
+			else{
+				nodeA = A;
+			}
+			({A, B} = nodeA);
+		}
+		else{
+			nodeA = new Node(A, B, this);
+		}
 		this.A = A;
 		this.B = B;
 		
-		this.nodeA = new Node(A, B, this);
+		this.nodeA = nodeA;
 		this.nodeB = new Node(B, A, this);
 	}
 	
