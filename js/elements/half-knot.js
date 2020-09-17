@@ -2,7 +2,9 @@ const {
 	BezierSegment,
 	Vector
 } = require('../base/index.js');
-
+/** 
+ * Полуузел
+ */
 class HalfKnot{
 	constructor(A, D, h){
 		const AD = D.sub(A);

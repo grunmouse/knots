@@ -3,6 +3,10 @@ const {
 	Vector
 } = require('../base/index.js');
 
+/**
+ * Открытая петля
+ */
+
 class OpenLoop{
 	constructor(O, Q, h){
 		const I = Q.sub(O).ort();

@@ -5,11 +5,12 @@ class LineSegment {
 		let nodeA;
 		if(A instanceof Node){
 			if(A.segment){
-				nodeA.productNode(0, B);
+				nodeA = A.productNode(0, B);
 			}
 			else{
 				nodeA = A;
 			}
+			nodeA.segment = this;
 			({A, B} = nodeA);
 		}
 		else{
@@ -44,7 +45,7 @@ class LineSegment {
 			code += '\n' + next.makePath();
 		}
 		
-		return path;
+		return code;
 	}
 }
 
