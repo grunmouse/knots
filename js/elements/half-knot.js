@@ -4,6 +4,7 @@ const {
 } = require('../base/index.js');
 /** 
  * Полуузел
+ * Состоит из двух пересекающихся сегментов AB и CD
  */
 class HalfKnot{
 	constructor(A, D, h){
@@ -26,10 +27,10 @@ class HalfKnot{
 		const segCD = new BezierSegment(C, P, Q, D);
 		
 		this.nodeA = segAB.nodeA;
-		this.nodeB = segAB.nodeD;
+		this.nodeB = segAB.nodeB;
 
 		this.nodeC = segCD.nodeA;
-		this.nodeD = segCD.nodeD;
+		this.nodeD = segCD.nodeB;
 		
 		this.segAB = segAB;
 		this.segCD = segCD;

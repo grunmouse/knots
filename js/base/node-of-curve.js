@@ -1,3 +1,5 @@
+const CurvePath = require('./curve-path.js');
+
 
 class NodeOfCurve{
 	constructor(A, B, segment){
@@ -12,29 +14,43 @@ class NodeOfCurve{
 		let {A, B} = this;
 		return B.sub(A);
 	}
+	
 	/**
-	 * Продолжение линии AB в сторону -V на величину s или V.
+	 * Построить вектор, сонаправленный с V, длиной s.
+	 * Если s===0 - вернуть V
 	 */
-	product(N, s){
-		let {A, V} = this;
-		N = N || A;
-		let d;
+	productV(s){
+		let d, V = this.V;
 		if(s){
 			d = V.ort().mul(s);
 		}
 		else{
 			d = V;
 		}
-		return N.sub(d);		
+		return d;
 	}
 	
-	productNode(N, s){
+	/**
+	 * Создать для узла симметричный сиблинг
+	 */
+	makeSibling(s){
 		let {A, V} = this;
-		N = N || A;
-		let B = this.product(N, s);
-		let node = new NodeOfCurve(N, B);
+		let B = A.sub(this.productV(s));
+		let node = new NodeOfCurve(A, B);
 		this.connect(node);
 		return node;
+	}
+	
+	/**
+	 * Создать новый узел, оттянутый в противоположную сторону и находящийся в точке N
+	 * Если N - число, то оно задаёт точку на оси AB
+	 */
+	mirror(N, s){
+		if(typeof N === 'number'){
+			N = A.add(this.productV(N));
+		}
+		let B = N.sub(this.productV(s));
+		return new NodeOfCurve(N, B);
 	}
 	
 	connect(node){
@@ -42,17 +58,30 @@ class NodeOfCurve{
 		node.sibling = this;
 	}
 	
-	makePath(){
-		return this.segment ? this.segment.makePath(this) : '';
+	makePath(start){
+		let {startNode, curves, close} = this.trace();
+		return new CurvePath(start || startNode.A, curves, close);
 	}
 	
-	startPath(N){
-		let {A, segment} = this;
-		N = N || A;
-		let code = 'M ' + N.join(',') + '\n' + segment.makePath(this);
-		
-		return code;
+	get isEnd(){
+		return !!this.segment && !this.sibling
 	}
+	
+	trace(state){
+		if(!state){
+			state = {start:this, curves:[]};
+		}
+		else if(state.start === this){
+			state.close = true;
+			return state;
+		}
+		
+		if(this.segment){
+			return this.segment.trace(this, state);
+		}
+		return state;
+	}
+	
 }
 
 module.exports = NodeOfCurve;

@@ -18,10 +18,10 @@ class OpenLoop{
 		const N = M.add(P).div(2);
 		
 		let OP = new BezierSegment(O, M, N, P);
-		let PQ = new BezierSegment(OP.nodeD, Q.add(bot), Q);
+		let PQ = new BezierSegment(OP.nodeB, Q.add(bot), Q);
 		
 		this.nodeA = OP.nodeA;
-		this.nodeB = PQ.nodeD;
+		this.nodeB = PQ.nodeB;
 	}
 }
 

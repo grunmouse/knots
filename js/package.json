@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@grunmouse/math-vector": "link:..\\..\\math-vector"
+    "@grunmouse/math-vector": "link:..\\..\\math-vector",
+    "@grunmouse/strings": "link:..\\..\\strings"
   }
 }

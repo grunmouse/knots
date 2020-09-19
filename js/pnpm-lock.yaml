@@ -1,5 +1,7 @@
 dependencies:
   '@grunmouse/math-vector': 'link:../../math-vector'
+  '@grunmouse/strings': 'link:../../strings'
 lockfileVersion: 5.1
 specifiers:
   '@grunmouse/math-vector': 'link:..\..\math-vector'
+  '@grunmouse/strings': 'link:..\..\strings'
