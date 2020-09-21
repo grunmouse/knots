@@ -1,7 +1,7 @@
 const {
-	BezierSegment,
-	Vector
-} = require('../base/index.js');
+	BezierSegment
+} = require('@grunmouse/cube-bezier');
+
 /** 
  * Полуузел
  * Состоит из двух пересекающихся сегментов AB и CD

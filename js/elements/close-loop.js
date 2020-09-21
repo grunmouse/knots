@@ -1,7 +1,6 @@
 const {
-	BezierSegment,
-	Vector
-} = require('../base/index.js');
+	BezierSegment
+} = require('@grunmouse/cube-bezier');
 
 const OpenLoop = require('./open-loop.js');
 /**

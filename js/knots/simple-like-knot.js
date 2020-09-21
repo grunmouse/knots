@@ -1,8 +1,10 @@
 const {
-	BezierSegment,
 	LineSegment,
-	Vector
-} = require('../base/index.js');
+	BezierSegment
+} = require('@grunmouse/cube-bezier');
+
+const {Vector2:Vector} = require('@grunmouse/math-vector');
+
 
 const {
 	ManyCross,

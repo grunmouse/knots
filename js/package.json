@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grunmouse/cube-bezier": "link:..\\..\\cube-bezier",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
     "@grunmouse/strings": "link:..\\..\\strings"
   }

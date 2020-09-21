@@ -1,7 +1,9 @@
 const {
-	BezierSegment,
-	Vector
-} = require('../base/index.js');
+	LineSegment,
+	BezierSegment
+} = require('@grunmouse/cube-bezier');
+
+const {Vector2:Vector} = require('@grunmouse/math-vector');
 
 const {
 	HalfKnot,
