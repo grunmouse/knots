@@ -1,1 +1,5 @@
+*.pdf
+*.log
+*.aux
+*.synctex.gz
 node_modules/*
