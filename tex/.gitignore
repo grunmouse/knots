@@ -1,4 +1,5 @@
 *.pdf
+!**/images/*.pdf
 *.log
 *.aux
 *.synctex.gz
