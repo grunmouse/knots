@@ -31,6 +31,12 @@ class ManyCross{
 		this.nodeB = last.nodeB;
 		this.nodeD = last.nodeD;
 		
+		this.segments = new Set();
+		for(let c of cross){
+			for(let seg of c.segments){
+				this.segments.add(seg);
+			}
+		}
 	}
 }
 

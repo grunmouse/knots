@@ -1,5 +1,5 @@
 const {
-	BezierSegment
+	Segment	
 } = require('@grunmouse/cube-bezier');
 
 /** 
@@ -23,8 +23,10 @@ class HalfKnot{
 		const P = N;
 		const Q = M;
 		
-		const segAB = new BezierSegment(A, M, N, B);
-		const segCD = new BezierSegment(C, P, Q, D);
+		const segAB = Segment.makeCubic(A, M, N, B);
+		const segCD = Segment.makeCubic(C, P, Q, D);
+		
+		//new Crossing(segAB, segCD);
 		
 		this.nodeA = segAB.nodeA;
 		this.nodeB = segAB.nodeB;
@@ -34,6 +36,8 @@ class HalfKnot{
 		
 		this.segAB = segAB;
 		this.segCD = segCD;
+		
+		this.segments = new Set([segAB, segCD]);
 	}
 	
 	

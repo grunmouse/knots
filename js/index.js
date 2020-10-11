@@ -1,5 +1,3 @@
-const SimpleOverhandKnot = require('./knots/simple-overhand-knot.js');
-const FigureEightKnot = require('./knots/figure-eight-knot.js');
 const EightLikeKnot = require('./knots/eight-like-knot.js');
 const SimpleLikeKnot = require('./knots/simple-like-knot.js');
 
@@ -55,7 +53,7 @@ function writeKnot(filepath, knot){
 	
 	let code = svg(body);
 	
-	return fsp.writeFile(filepath, code);
+	//return fsp.writeFile(filepath, code);
 }
 
 async function eightLike(){

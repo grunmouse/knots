@@ -1,6 +1,5 @@
 const {
-	LineSegment,
-	BezierSegment
+	Segment
 } = require('@grunmouse/cube-bezier');
 
 const {Vector2:Vector} = require('@grunmouse/math-vector');
@@ -29,45 +28,53 @@ class EightLikeKnot{
 		const PO = new OpenLoop(map.P, map.O1, s);
 		const BC = new OpenLoop(map.B, map.C, s);
 		
+		const segments = [...PO.segments, ...BC.segments];
+		
 		let nodeO, nodeA;
 		if(n===0){
-			let BA = new LineSegment(BC.nodeA, (3+n+m)*s);
+			let BA = Segment.makeLine(BC.nodeA, (3+n+m)*s);
 			nodeO = PO.nodeB;
 			nodeA = BA.nodeB;
+			segments.push(BA);
 		}
 		else{
 			let crossN = new ManyCross(map.O1, map.O, n, -s);
 			crossN.nodeA.connect(PO.nodeB);
-			let EB = new BezierSegment(crossN.nodeB, BC.nodeA);
-			let EA = new LineSegment(crossN.nodeC, s);
+			let EB = Segment.makeCubic(crossN.nodeB, BC.nodeA);
+			let EA = Segment.makeLine(crossN.nodeC, s);
 			nodeO = crossN.nodeD;
 			nodeA = EA.nodeB;
+			segments.push(EB, EA, ...crossN.segments)
 		}
 		
 		let nodeC, nodeD;
 		if(m===0){
-			let PD = new LineSegment(PO.nodeA, (3+n+m)*s);
+			let PD = Segment.makeLine(PO.nodeA, (3+n+m)*s);
 			nodeC = BC.nodeB;
 			nodeD = PD.nodeB;
+			segments.push(PD);
 		}
 		else{
 			let crossM = new ManyCross(map.C1, map.C, m, s);
 			crossM.nodeD.connect(BC.nodeB);
-			let FD = new LineSegment(crossM.nodeB, s);
-			let PF = new BezierSegment(PO.nodeA, crossM.nodeC);
+			let FD = Segment.makeLine(crossM.nodeB, s);
+			let PF = Segment.makeCubic(PO.nodeA, crossM.nodeC);
 			nodeC = crossM.nodeA;
 			nodeD = FD.nodeB;
 			
+			segments.push(FD, PF, ...crossM.segments);
 			let trac = crossM.nodeD.trace();
 			if(trac.close){
 				this.loopNode = trac.start;
 			}
 		}
-		let OC = new BezierSegment(nodeO, 2*s, nodeC, 2*s);
+		let OC = Segment.makeCubic(nodeO, 2*s, nodeC, 2*s);
 
+		segments.push(OC);
 		
 		this.nodeA = nodeA;
 		this.nodeB = nodeD;
+		this.segments = new Set(segments);
 	}
 }
 

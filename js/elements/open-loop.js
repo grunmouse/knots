@@ -1,5 +1,5 @@
 const {
-	BezierSegment
+	Segment
 } = require('@grunmouse/cube-bezier');
 
 /**
@@ -16,11 +16,13 @@ class OpenLoop{
 		const M = O.add(bot);
 		const N = M.add(P).div(2);
 		
-		let OP = new BezierSegment(O, M, N, P);
-		let PQ = new BezierSegment(OP.nodeB, Q.add(bot), Q);
+		let OP = Segment.makeCubic(O, M, N, P);
+		let PQ = Segment.makeCubic(OP.nodeB, Q.add(bot), Q);
 		
 		this.nodeA = OP.nodeA;
 		this.nodeB = PQ.nodeB;
+		
+		this.segments = new Set([OP, PQ]);
 	}
 }
 

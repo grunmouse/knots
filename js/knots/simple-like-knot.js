@@ -1,6 +1,5 @@
 const {
-	LineSegment,
-	BezierSegment
+	Segment
 } = require('@grunmouse/cube-bezier');
 
 const {Vector2:Vector} = require('@grunmouse/math-vector');
@@ -30,15 +29,21 @@ class SimpleLikeKnot{
 		let DM = new OpenLoop(map.D, map.M, s);
 		let M1D1 = new OpenLoop(map.M1, map.D1, s);
 		
-		let MM = new BezierSegment(DM.nodeB, M1D1.nodeA);
+		let MM = Segment.makeCubic(DM.nodeB, M1D1.nodeA);
 		
 		let cross = new ManyCross(map.D, map.D1, n, s);
 		cross.nodeA.connect(DM.nodeA);
 		cross.nodeD.connect(M1D1.nodeB);
 		
-		let CA = new LineSegment(cross.nodeC, s);
-		let CB = new LineSegment(cross.nodeB, s);
+		let CA = Segment.makeLine(cross.nodeC, s);
+		let CB = Segment.makeLine(cross.nodeB, s);
 		
+		const segments = [
+			...DM.segments,
+			...M1D1.segments,
+			cross.segments,
+			MM, CA, CB
+		];
 		let trac = cross.nodeD.trace();
 		if(trac.close){
 			this.loopNode = trac.start;
@@ -47,6 +52,8 @@ class SimpleLikeKnot{
 		
 		this.nodeA = CA.nodeB;
 		this.nodeB = CB.nodeB;
+		
+		this.segments = new Set(segments);
 	}
 }
 
