@@ -63,7 +63,9 @@ class EightLikeKnot{
 			nodeD = FD.nodeB;
 			
 			segments.push(FD, PF, ...crossM.segments);
-			let trac = crossM.nodeD.trace();
+			let trac = crossM.nodeD.getCurves();
+			console.log(trac);
+			console.log(trac.end.sibling === trac.start);
 			if(trac.close){
 				this.loopNode = trac.start;
 			}

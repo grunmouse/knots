@@ -7,19 +7,20 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="60mm"
+   height="40mm"
+   viewBox="-10 -25 60 40"
    version="1.1"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
    >
-<g style="fill:none;stroke:#000000;stroke-width:0.292919px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1">
-		<path d="M 50,50
-c 5,0 5,-6 10,-6
-c 5,0 5,1.5 5,16.5
-c 0,15 -5,15 -10,15
-c -5,0 -10,0 -10,-15
-c 0,-15 0,-16.5 5,-16.5
-c 5,0 5,6 10,6" />
-	</g>
+
+<defs>
+	<marker id="dot" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
+		<circle cx="5" cy="5" r="5" fill="red" />
+    </marker>
+</defs>
+
+<path
+	d="M -5,0 c 30,0 5,0 35,0 c 10,0 10,-5 10,-10 c 0,-5 0,-10 -10,-10 c -20,0 0,30 -20,30 c -10,0 -10,-5 -10,-10 c 0,-5 0,-10 10,-10 c 30,0 5,0 35,0"
+	style="fill:none;stroke:#000000;stroke-width:0.25px;marker-mid:url(#dot)"
+	/>
 </svg>

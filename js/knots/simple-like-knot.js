@@ -11,6 +11,11 @@ const {
 } = require('../elements/index.js');
 
 class SimpleLikeKnot{
+	/**
+	 * @param A - начальная точка
+	 * @param s - машстаб
+	 * @param n - количество пересечений
+	 */
 	constructor(A, s, n){
 		let map = {
 			C:[1,0],
@@ -41,10 +46,10 @@ class SimpleLikeKnot{
 		const segments = [
 			...DM.segments,
 			...M1D1.segments,
-			cross.segments,
+			...cross.segments,
 			MM, CA, CB
 		];
-		let trac = cross.nodeD.trace();
+		let trac = cross.nodeD.getCurves();
 		if(trac.close){
 			this.loopNode = trac.start;
 		}
