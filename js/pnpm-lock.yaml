@@ -1,9 +1,11 @@
 dependencies:
   '@grunmouse/cube-bezier': 'link:../../cube-bezier'
+  '@grunmouse/math-matrix': 'link:../../math-matrix'
   '@grunmouse/math-vector': 'link:../../math-vector'
   '@grunmouse/strings': 'link:../../strings'
 lockfileVersion: 5.1
 specifiers:
   '@grunmouse/cube-bezier': 'link:..\..\cube-bezier'
+  '@grunmouse/math-matrix': 'link:..\..\math-matrix'
   '@grunmouse/math-vector': 'link:..\..\math-vector'
   '@grunmouse/strings': 'link:..\..\strings'
