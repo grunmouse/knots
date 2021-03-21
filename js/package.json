@@ -2,16 +2,18 @@
   "name": "knots-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "bezier-segment.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@grunmouse/binary": "link:..\\..\\binary",
     "@grunmouse/cube-bezier": "link:..\\..\\cube-bezier",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
+    "@grunmouse/multioperator-ariphmetic": "link:..\\..\\multioperator-ariphmetic",
     "@grunmouse/strings": "link:..\\..\\strings"
   }
 }

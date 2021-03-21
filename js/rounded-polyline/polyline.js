@@ -1,5 +1,5 @@
 const {symbols:{SUB, ADD, MUL, DIV}} = require('@grunmouse/multioperator-ariphmetic');
-
+const {Vector3, Vector2} = require('@grunmouse/math-vector');
 /**
  * Находит массив разностей точек
  */
@@ -120,12 +120,66 @@ function intersectMatrix(parts){
 	return result;
 }
 
+/**
+ * Делит трёхмерную ломаную со слоями массив плоских ломаных
+ */
+function splitByLevels(component){
+	const parts = [];
+	
+	let part, level;
+	
+	for(let point of component){
+		if(level !== point.z){
+			part = [];
+			part.color = component.color;
+			level = point.z;
+			parts.push(part);
+		}
+		part.push(point);
+	}
+	if(component.ended){
+		part.ended = true;
+	}
+	if(component.started){
+		parts[0].started = true;
+	}
+	
+	//console.log(levels.map(level=>level.map(part=>expandEnds(part, 1))));
+	return parts;
+}
+
+/**
+ * Возвращает новую ломаную с удлинёнными концами
+ * @param part : Array<Vector2>
+ * @param ex : Number - длина удлинения
+ *
+ * @return Array<Vector2>
+ */
+function expandEnds(part, ex){
+	let A = part[0], B = part[1], D = part[part.length-1], C = part[part.length-2];
+	let BA = A.sub(B);
+	let CD = D.sub(C);
+	
+	let dA1 = BA.ort().mul(ex);
+	let dD1 = CD.ort().mul(ex);
+	let A1 = A.add(dA1);
+	let D1 = D.add(dD1);
+	
+	let result = [A1, ...part.slice(1, -1), D1];
+	
+	result.started = part.started;
+	result.ended = part.ended;
+	result.color = part.color;
+	
+	return result;
+}
 
 module.exports = {
 	delta,
 	accum,
 	boldstroke,
 	intersectLinePart,
-	intersectMatrix
-	
-}
+	intersectMatrix,
+	splitByLevels,
+	expandEnds
+};

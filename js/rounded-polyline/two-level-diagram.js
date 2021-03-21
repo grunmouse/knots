@@ -1,74 +1,59 @@
-const {Vector3} = require('@grunmouse/math-vector');
+const {Vector3, Vector2} = require('@grunmouse/math-vector');
+const {svgPart} = require('./render.js');
+const {
+	splitByLevels,
+	expandEnds
+} = require('./polyline.js');
+
+function splitEdges(arr){
+	let result = [], len = arr.length;
+	for(let i=1; i<len; ++i){
+		result.push([arr[i-1], arr[i]]);
+	}
+	return result;
+}
 
 class TwoLevelDiagram{
-	init(){
-		//Array<Array<Vector3>>
-		this.components = [];
-		this.z = 1;
-		//this.pos = new Vector3(0,0,1);
+	/**
+	 * @property components : Array<Vector3>
+	 */
+	 
+	
+	constructor(components){
+		components = components || [];
+		this.components = Array.from(components);
 	}
 	
-	get lastComponent(){
-		return this.components[this.components.length-1];
+	points(){
+		return this.components.flat();
 	}
 	
-	get lastPoint(){
-		const components = this.components;
-		let i = this.components.length-1;
-		while(components[i].length === 0){
-			--i;
-		}
-		const component = components[i];
-		if(component){
-			return component[component.length-1];
-		}
+	edges(){
+		return this.components.map(splitEdges).flat();
 	}
 	
-	extPoint(point){
-		return new Vector3(point[0], point[1], this.z);
-	}
-	
-	addPoint(d){
-		const prev = this.lastPoint;
-		if(!prev){
-			throw new Error('Not specified last point');
-		}
-		return prev.add(new Vector3(d[0], d[1], 0));
-	}
-	
-	M(point){
-		this.components.push([this.extPoint(point)]);
-	}
-	
-	m(d){
-		this.components.push([this.addPoint(d)]);
-	}
-	
-	L(p){
-		this.lastComponent.push(this.extPoint(p));
+	rectangleArea(ex){
+		ex =  ex || 0;
+		let points = this.components.flat();
+		let x = points.map(v=>v.x);
+		let y = points.map(v=>v.y);
+		x.sort((a,b)=>(a-b));
+		y.sort((a,b)=>(a-b));
+		
+		return [
+			new Vector2(x[0] -ex, y[0] -ex),
+			new Vector2(x.pop() +ex, y.pop()+ex)
+		];
 	}
 
-	l(d){
-		this.lastComponent.push(this.addPoint(d));
-	}
-	
-	up(){
-		if(this.z === 0){
-			this.z = 1;
-			const prev = this.lastPoint;
-			if(prev){
-				this.L(prev);
-			}
-		}
-	}
-	down(){
-		if(this.z === 1){
-			this.z = 0;
-			const prev = this.lastPoint;
-			if(prev){
-				this.L(prev);
-			}
-		}
+	renderToSVG(width){
+		let parts = this.components.map(splitByLevels).flat();
+		parts.sort((a,b)=>(a[0].z-b[0].z));
+		parts = parts.map(part=>expandEnds(part, 1));
+		
+		let code = parts.map(part=>svgPart(part, width, 'black'));
+		
+		return code.join('\n');
 	}
 }
 

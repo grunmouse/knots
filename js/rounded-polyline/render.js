@@ -1,10 +1,12 @@
 const {delta, boldstroke} = require('./polyline.js');
+const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 function svgPolyline(points, close){
 	let start = points[0];
-	let steps = delta(start);
-	let code = 'M ' + start.join(",") + ' '
-		+ steps.map((v)=>('l ' + v.join(","))).join(' ');
+	let steps = delta(points);
+
+	let code = 'M ' + start.slice(0,2).join(",") + ' '
+		+ steps.map((v)=>('l ' + v.slice(0,2).join(","))).join(' ');
 	
 	if(close){
 		code += ' Z';
@@ -49,3 +51,14 @@ function svgBold(points, width, isStart, isEnd){
 		stroke: svgStrokePath
 	}
 }
+
+function svgPart(part, width, strokeColor){
+	let form = svgBold(part.map(v=>v.cut(2)), width, part.started, part.ended);
+	let fillColor = part.color || '#FFFFFF';
+	strokeColor = strokeColor || '#000000';
+	
+	return `<path d="${form.fill}" fill="${fillColor}" stroke="none" />
+<path d="${form.stroke}" fill="none" stroke="${strokeColor}" style="stroke-width:0.25" />`;
+}
+
+module.exports = {svgBold, svgPart};
