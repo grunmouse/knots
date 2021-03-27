@@ -1,5 +1,8 @@
 const {symbols:{SUB, ADD, MUL, DIV}} = require('@grunmouse/multioperator-ariphmetic');
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
+const binary = require("@grunmouse/binary");
+const {MapOfSet} = require('@grunmouse/special-map');
+
 /**
  * Находит массив разностей точек
  */
@@ -172,6 +175,64 @@ function expandEnds(part, ex){
 	result.color = part.color;
 	
 	return result;
+}
+
+function VectorKey(vec){
+	let buff = new Float64Array.from(vec).buffer;
+	
+	let value = bigint.fromBuffer(buff);
+	
+	return value;
+}
+
+function linkComponents(parts){
+	const pull = new Set(parts);
+	const mapping = new MapOfSet();
+	for(let cmp of parts){
+		let A = VectorKey(cmp[0]), B = VectorKey(cmp[cmp.length-1]);
+		mapping.add(A, {part:cmp});
+		mapping.add(B, {part:cmp, inv:true});
+	}
+	let counts = [...mapping.entries()].sort((a,b)=>(a[1].size - b[1].size));
+	
+	const components = [];
+	
+	function getPart(s){
+		for(let item of s){
+			if(pull.has(item.part)){
+				return item;
+			}
+		}
+	}
+	
+	function joinPart(into, item){
+		let part = item.part.slice(0);
+		if(item.inv){
+			part.reverse();
+		}
+		if(into.length){
+			part.shift();
+		}
+		into.push(...part);
+	}
+		
+	
+	while(counts.length){
+		let start = counts.shift();
+		let component = [];
+		components.push(component);
+		let s = start[1];
+		let item = getPart(s);
+		while(item){
+			joinPart(component, item);
+			pull.delete(item.part);
+			s.delete(item);
+			let endKey = VectorKey(component[component.length-1]);
+			s = mapping.get(endKey);
+			item = getPart(s);
+		}
+		counts = counts.filter(a=>(a[1].size>0));
+	}
 }
 
 module.exports = {

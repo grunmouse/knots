@@ -1,7 +1,7 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 
-const TwoLevelDiagram = require('./two-level-diagram.js');
+const TwoLevelDiagram = require('./levels-diagram.js');
 
 const dirmap = (function(){
 	const N = new Vector2(0,-1);

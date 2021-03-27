@@ -2,7 +2,8 @@ const {Vector3, Vector2} = require('@grunmouse/math-vector');
 const {svgPart} = require('./render.js');
 const {
 	splitByLevels,
-	expandEnds
+	expandEnds,
+	intersectMatrix
 } = require('./polyline.js');
 
 function splitEdges(arr){
@@ -13,7 +14,11 @@ function splitEdges(arr){
 	return result;
 }
 
-class TwoLevelDiagram{
+/**
+ * Представляет схему узла в виде трёхмерной ломаной линии, 
+ * все звенья которой параллельны либо плоскости xOy, либо оси z
+ */
+class LevelsDiagram{
 	/**
 	 * @property components : Array<Vector3>
 	 */
@@ -30,6 +35,13 @@ class TwoLevelDiagram{
 	
 	edges(){
 		return this.components.map(splitEdges).flat();
+	}
+	
+	intersect(){
+		let lines = this.edges().filter((edge)=>(edge[0].z === edge[1].z));
+		let lines2 = lines.map((edge)=>(edge.map(Vector2.from)));
+		
+		let matrix = intersectMatrix(lines2);
 	}
 	
 	rectangleArea(ex){
@@ -57,4 +69,4 @@ class TwoLevelDiagram{
 	}
 }
 
-module.exports = TwoLevelDiagram;
+module.exports = LevelsDiagram;

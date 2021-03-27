@@ -4,6 +4,7 @@ dependencies:
   '@grunmouse/math-matrix': link:../../math-matrix
   '@grunmouse/math-vector': link:../../math-vector
   '@grunmouse/multioperator-ariphmetic': link:../../multioperator-ariphmetic
+  '@grunmouse/special-map': link:../../special-map
   '@grunmouse/strings': link:../../strings
 lockfileVersion: 5.2
 specifiers:
@@ -12,4 +13,5 @@ specifiers:
   '@grunmouse/math-matrix': link:..\..\math-matrix
   '@grunmouse/math-vector': link:..\..\math-vector
   '@grunmouse/multioperator-ariphmetic': link:..\..\multioperator-ariphmetic
+  '@grunmouse/special-map': link:..\..\special-map
   '@grunmouse/strings': link:..\..\strings
