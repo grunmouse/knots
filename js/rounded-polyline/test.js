@@ -17,7 +17,7 @@ async function main(){
 	
 
 	
-	let body = knot.renderToSVG(5);
+	let body = knot.renderToPS(5);
 	
 	
 	let code = eps(body, knot.rectangleArea(5));

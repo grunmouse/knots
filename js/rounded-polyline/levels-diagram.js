@@ -69,7 +69,7 @@ class LevelsDiagram{
 		return code.join('\n');
 	}
 	
-	renderToSVG(width){
+	renderToPS(width){
 		let parts = this.components.map(splitByLevels).flat();
 		parts.sort((a,b)=>(a[0].z-b[0].z));
 		parts = parts.map(part=>expandEnds(part, 1));

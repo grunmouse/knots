@@ -1,11 +1,11 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 
-const TwoLevelDiagram = require('./levels-diagram.js');
+const LevelsDiagram = require('./levels-diagram.js');
 
 const dirmap = require('./dirmap.js');
 
-class TwoLevelDiagramDrawer extends TwoLevelDiagram{
+class MultiLevelDiagramDrawer extends LevelsDiagram{
 	constructor(){
 		super([]);
 		this.z = 1;
@@ -16,7 +16,7 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 	}
 	
 	production(){
-		return new TwoLevelDiagram(this.components);
+		return new LevelsDiagram(this.components);
 	}
 
 	get lastComponent(){
@@ -52,18 +52,8 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 			this.components.push([this._pos, point]);
 			this._append = true;
 			this.drawing = true;
-			this.lastComponent.color = this._color;
 		}
 		this._pos = point;
-	}
-	
-	color(name){
-		if(this._append){
-			this.lastComponent.color = name;
-		}
-		else{
-			this._color = name;
-		}
 	}
 	
 	/**
@@ -122,20 +112,14 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 	/**
 	 *
 	 */
-	swap(){
-		this.level(1-this.z);
+	vertical(dz){
+		this.level(this.z+dz);
 	}	
 	
 	go(p, h){
 		if(this.drawing){
-			if(h){
-				//console.log('hole', p);
-				this.lh(p);
-			}
-			else{
-				//console.log('line', p);
-				this.l(p);
-			}
+			//console.log('line', p);
+			this.l(p);
 		}
 		else{
 			//console.log('move', p);
@@ -143,25 +127,6 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 		}
 	}
 
-	hole(point){
-		if(point.eq(this._pos)){
-			this.swap();
-		}
-		else{
-			let C = this._pos.add(point).div(2);
-			this.L(C);
-			this.swap();
-			this.L(point);
-		}
-	}
-	
-	lh(d){
-		this.hole(this.addPoint(d));
-	}
-	Lh(p){
-		this.hole(this.extPoint(p));
-	}
-	
 	/**
 	 * Заканчивает компонент и помечает его конец как ходовой
 	 */
@@ -193,10 +158,8 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 		for(let i = 0; i<len; ++i){
 			let command = tockens[i];
 			let value = tockens[i+1];
-			if(command === 'c'){
-				++i;
-			}
-			else if(!isNaN(value)){
+
+			if(!isNaN(value)){
 				value = Number(value);
 				++i;
 			}
@@ -204,7 +167,7 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 				value = 1;
 			}
 			
-			value*=scale;
+			
 			
 			//console.log(command, value);
 			if(command === "p"){
@@ -219,25 +182,23 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 			else if(command === "f"){
 				this.end();
 			}
-			else if(command === "h"){
-				this.swap();
+			else if(command === "l"){
+				this.vertical(value);
 			}
 			else if(command === "x"){
+				value*=scale;
 				this.M([value, this._pos.y]);
 			}
 			else if(command === "y"){
+				value*=scale;
 				this.M([this._pos.x, value]);
 			}
 			else{
-				let h = false;
-				if(["h", "*"].includes(command[0])){
-					h = true;
-					command = command.slice(1);
-				}
 				let v = dirmap[command];
 				if(v){
+					value*=scale;
 					v = v.mul(value);
-					this.go(v, h);
+					this.go(v);
 				}
 				else{
 					throw new Error('no exist dir '+command);
@@ -248,4 +209,4 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 
 }
 
-module.exports = TwoLevelDiagramDrawer;
+module.exports = MultiLevelDiagramDrawer;

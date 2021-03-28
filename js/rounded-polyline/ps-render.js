@@ -54,11 +54,14 @@ function psBold(points, width, isStart, isEnd){
 
 function psColor(color){
 	if(color[0]==='#'){
-		let R = '16#' + color.slice(1,3);
-		let G = '16#' + color.slice(3,5);
-		let B = '16#' + color.slice(5,7);
+		let R = color.slice(1,3);
+		let G = color.slice(3,5);
+		let B = color.slice(5,7);
 		
-		return [R, G, B, 'setrgbcolor'].join(' ');
+		let code = [R, G, B].map((hex)=>(parseInt(hex, 16)/255));
+		code.push('setrgbcolor');
+		
+		return code.join(' ');
 	}
 	else{
 		throw new Error('Unknown ps color ' + color);

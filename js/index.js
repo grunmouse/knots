@@ -4,6 +4,13 @@ const Drawer = require('./rounded-polyline/two-level-diagram-drawer.js');
 const fsp = require('fs').promises;
 
 const {svg} = require('./svg-code.js');
+const {eps} = require('./eps-code.js');
+
+const {
+	simpleKnot,
+	simpleKnot2,
+	doubleSimpleKnot
+} = require('./knots/simple-blood.js');
 
 const colors = [
 	"#FED6BC",
@@ -13,50 +20,22 @@ const colors = [
 	"#C6D8FF"
 ];
 
-
-function simpleKnot(n){
+function doRender(knot){
+	knot.components.forEach((cmp, i)=>{cmp.color = colors[i]});
 	
-	let code = [
-		"d o *o 0.5 no ",
-		"*o 0.5 so *o 0.5 no ".repeat(n),
-		"*o s 2 ",
-		"*w " + (3 + n*3),
-		"n 2 *o so ",
-		"*o 0.5 no *o 0.5 so ".repeat(n),
-		"*o 0.5 o f "
-	].join(' ');
-	
-	let knot = new Drawer();
-	knot.draw(10, code);
-	
-	knot.components[0].color = colors[0];
-	
-	return svg(knot.renderToSVG(2), knot.rectangleArea(5));
+	return eps(knot.renderToPS(2), knot.rectangleArea(5));
 }
 
-function simpleKnot2(n){
-	let code = [
-		"d o *o",
-		"*o *o ".repeat(n),
-		"o s 2",
-		"*w n 3",
-		"*w s 3 *w n 3 ".repeat(n),
-		"*w s 2 o",
-		"*o *o ".repeat(n),
-		"*o o f"
-	].join(' ');
-
-	let knot = new Drawer();
-	//knot.swap();
-	knot.draw(5, code);
-	
-	knot.components[0].color = colors[0];
-	
-	return svg(knot.renderToSVG(2), knot.rectangleArea(5));
-}
 
 async function main(){
-	await fsp.writeFile('exp.svg', simpleKnot2(2));
+	await fsp.writeFile('../tex/knots/images/simple.eps', doRender(simpleKnot(0)));
+	await fsp.writeFile('../tex/knots/images/blood-1.eps', doRender(simpleKnot(1)));
+	await fsp.writeFile('../tex/knots/images/blood-2.eps', doRender(simpleKnot(2)));
+	await fsp.writeFile('../tex/knots/images/simple-v2.eps', doRender(simpleKnot2(0)));
+	await fsp.writeFile('../tex/knots/images/blood-1-v2.eps', doRender(simpleKnot2(1)));
+	await fsp.writeFile('../tex/knots/images/double-simple-1-1.eps', doRender(doubleSimpleKnot(1,1)));
+	await fsp.writeFile('../tex/knots/images/double-simple-2-2.eps', doRender(doubleSimpleKnot(2,2)));
+	await fsp.writeFile('../tex/knots/images/double-simple-3-3.eps', doRender(doubleSimpleKnot(3,3)));
 }
 
 main().catch(e=>console.log(e.stack));

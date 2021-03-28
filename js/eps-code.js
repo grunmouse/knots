@@ -12,6 +12,10 @@ function eps(body, area){
 %%EndComments
 %%BeginProlog
 save
+gsave
+2 setlinecap
+2 setlinejoin
+0.25 setlinewidth
 %%EndProlog
 %%BeginSetup
 %%EndSetup
@@ -22,6 +26,7 @@ save
 ${body}
 showpage
 %%Trailer
+grestore
 restore
 %%EOF
 `;
