@@ -27,6 +27,16 @@ function accum(start, arr){
 	return res;
 }
 
+function onedistanceABC(A, B, C){
+	const AB = B.sub(A), BC = C.sub(B);
+	const e0 = AB.ort().rotOrto(1);
+	const e1 = BC.ort().rotOrto(1);
+	
+	const r = e0.add(e1).div(1 + e0.dot(e1));
+	
+	return r;
+}
+
 /**
  * Рассчитывает единичное смещение точек ломаной, эквидистатной заданной
  */
@@ -185,59 +195,10 @@ function VectorKey(vec){
 	return value;
 }
 
-function linkComponents(parts){
-	const pull = new Set(parts);
-	const mapping = new MapOfSet();
-	for(let cmp of parts){
-		let A = VectorKey(cmp[0]), B = VectorKey(cmp[cmp.length-1]);
-		mapping.add(A, {part:cmp});
-		mapping.add(B, {part:cmp, inv:true});
-	}
-	let counts = [...mapping.entries()].sort((a,b)=>(a[1].size - b[1].size));
-	
-	const components = [];
-	
-	function getPart(s){
-		for(let item of s){
-			if(pull.has(item.part)){
-				return item;
-			}
-		}
-	}
-	
-	function joinPart(into, item){
-		let part = item.part.slice(0);
-		if(item.inv){
-			part.reverse();
-		}
-		if(into.length){
-			part.shift();
-		}
-		into.push(...part);
-	}
-		
-	
-	while(counts.length){
-		let start = counts.shift();
-		let component = [];
-		components.push(component);
-		let s = start[1];
-		let item = getPart(s);
-		while(item){
-			joinPart(component, item);
-			pull.delete(item.part);
-			s.delete(item);
-			let endKey = VectorKey(component[component.length-1]);
-			s = mapping.get(endKey);
-			item = getPart(s);
-		}
-		counts = counts.filter(a=>(a[1].size>0));
-	}
-}
-
 module.exports = {
 	delta,
 	accum,
+	onedistanceABC,
 	boldstroke,
 	intersectLinePart,
 	intersectMatrix,
