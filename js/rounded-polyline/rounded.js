@@ -2,7 +2,7 @@ const {
 	delta,
 	onedistanceABC,
 	boldstroke
-} = require('../polyline.js');
+} = require('./polyline.js');
 
 function roundedBoldstroke(points, s){
 	const {L, R} = boldstroke(points, s);
@@ -35,8 +35,6 @@ function roundedBoldstroke(points, s){
 }
 
 function maxRoundRadius(points){
-	let prevR = [], postR = [];
-	let appR = [];
 	let R = [];
 	
 	let d = delta(points);
@@ -63,19 +61,7 @@ function maxRoundRadius(points){
 		}
 		let a = AB.abs();
 		let b = BC.abs();
-		if(isNaN(R[i-1])){
-			a /= 2;
-		}
-		else{
-			a -= R[i-1];
-		}
-		if(isNaN(R[i+1])){
-			b /= 2;
-		}
-		else{
-			b -= R[i+1];
-		}
-		R[i] = Math.min(a, b);
+		R[i] = Math.min(a/2, b/2);
 		return R[i];
 	}
 	

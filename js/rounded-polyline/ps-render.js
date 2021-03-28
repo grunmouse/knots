@@ -5,10 +5,10 @@ function psPolyline(points, close){
 	let start = points[0];
 	let steps = points.slice(1);
 
-	let code = [];
-	
-	let code = [start[0], start[1], 'moveto'].join(' ') + '\n' +
-		'newpath\n' +
+
+	let code = 
+		(close ? 'newpath\n' : '') +
+		[start[0], start[1], 'moveto'].join(' ') + '\n' +
 		steps.map((v, i)=>{
 			if(v.radius){
 				let next = steps[i+1] || start;
@@ -47,8 +47,8 @@ function psBold(points, width, isStart, isEnd){
 	}
 	
 	return {
-		fill: svgFillPath,
-		stroke: svgStrokePath
+		fill: codeFill,
+		stroke: psStroke
 	}
 }
 
@@ -74,4 +74,8 @@ function psPart(part, width, strokeColor){
 		+ psColor(strokeColor) + '\n' + form.stroke + '\nstroke';
 	
 	return code;
+}
+
+module.exports = {
+	psPart
 }

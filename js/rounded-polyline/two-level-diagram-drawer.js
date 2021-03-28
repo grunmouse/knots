@@ -42,7 +42,7 @@ class TwoLevelDiagramDrawer extends TwoLevelDiagram{
 		this.z = 1;
 		this._pos = new Vector3(0,0,1);
 		this._append = false;
-		this._color = "white";
+		this._color = "#FFFFFF";
 		this.drawing = false;
 	}
 	

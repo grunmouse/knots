@@ -1,5 +1,6 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 const {svgPart} = require('./render.js');
+const {psPart} = require('./ps-render.js');
 const {
 	splitByLevels,
 	expandEnds,
@@ -64,6 +65,16 @@ class LevelsDiagram{
 		parts = parts.map(part=>expandEnds(part, 1));
 		
 		let code = parts.map(part=>svgPart(part, width, 'black'));
+		
+		return code.join('\n');
+	}
+	
+	renderToSVG(width){
+		let parts = this.components.map(splitByLevels).flat();
+		parts.sort((a,b)=>(a[0].z-b[0].z));
+		parts = parts.map(part=>expandEnds(part, 1));
+		
+		let code = parts.map(part=>psPart(part, width, '#000000'));
 		
 		return code.join('\n');
 	}
