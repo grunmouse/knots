@@ -14,12 +14,12 @@ function roundedBoldstroke(points, s){
 			let AB = B.sub(A);
 			let BC = C.sub(B);
 			let rot = AB.cross(BC);
-			if(rot>0){
+			if(rot<0){
 				//левый поворот
 				L[i].radius = B.radius - s;
 				R[i].radius = B.radius + s;
 			}
-			else if(rot<0){
+			else if(rot>0){
 				//правый поворот
 				L[i].radius = B.radius + s;
 				R[i].radius = B.radius - s;
@@ -34,20 +34,21 @@ function roundedBoldstroke(points, s){
 	return {L, R};
 }
 
-function maxRoundRadius(points){
+function maxRoundRadius(points, ex){
+	ex = ex || 0;
 	let R = [];
 	
 	let d = delta(points);
 	
 	//function
 	
-	function calcR(i){
+	function setZero(_, i){
 		if(!isNaN(R[i])){
 			return R[i];
 		}
 		let A = points[i-1];
 		let C = points[i+1];
-		if(!A || !B){
+		if(!A || !C){
 			R[i] = 0;
 			return R[i];
 		}
@@ -59,18 +60,45 @@ function maxRoundRadius(points){
 			R[i] = 0;
 			return R[i];
 		}
+	}
+	
+	function calcR(_, i){
+		if(!isNaN(R[i])){
+			return R[i];
+		}
+		let A = points[i-1];
+		let C = points[i+1];
+		if(!A || !C){
+			R[i] = 0;
+			return R[i];
+		}
+		let B = points[i];
+		let AB = B.sub(A);
+		let BC = C.sub(B);		
 		let a = AB.abs();
 		let b = BC.abs();
-		R[i] = Math.min(a/2, b/2);
+		
+		let r = onedistanceABC(A, B, C);
+		
+		let s = Math.min(R[i-1] === 0 ? a-ex : a/2, R[i+1] === 0 ? b-ex : b/2);
+		
+		
+		R[i] = s /Math.sqrt(r.abs()**2 - 1);
+		
+		
 		return R[i];
 	}
 	
-	points.forEach((B, i)=>{
-		calcR(i);
-	});
+	points.forEach(setZero);
+	points.forEach(calcR);
+	
+	points.forEach((p, i)=>{p.radius = R[i]});
+	
+	return R;
 	
 }
 
 module.exports = {
-	roundedBoldstroke
+	roundedBoldstroke,
+	maxRoundRadius
 }

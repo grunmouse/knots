@@ -1,18 +1,29 @@
 const Drawer = require('../rounded-polyline/two-level-diagram-drawer.js');
 const Drawer2 = require('../rounded-polyline/multi-level-diagram-drawer.js');
 
+function doRepeat(str){
+	return str.replace(/\(([^)]*)\)\[(\d+)\]/g, (str, item, n)=>{
+		return new Array(+n).fill(item).join(" ");
+	});
+}
 
+/**
+ * Схема 1. Представляет простой узел или кровавый узел
+ */
 function simpleKnot(n){
+
+	let code = `
+		h p o 
+		*o 0.5 no
+		(*o 0.5 so *o 0.5 no )[${n}]
+		*o s 2
+		*w ${(3 + n*3)}
+		n 2 *o so 
+		(*o 0.5 no *o 0.5 so )[${n}]
+		*o 0.5 o f
+	`;
 	
-	let code = [
-		"p o *o 0.5 no ",
-		"*o 0.5 so *o 0.5 no ".repeat(n),
-		"*o s 2 ",
-		"*w " + (3 + n*3),
-		"n 2 *o so ",
-		"*o 0.5 no *o 0.5 so ".repeat(n),
-		"*o 0.5 o f "
-	].join(' ');
+	code = doRepeat(code);
 	
 	let knot = new Drawer();
 	knot.draw(10, code);
@@ -20,6 +31,9 @@ function simpleKnot(n){
 	return knot.production();
 }
 
+/**
+ * Вторая форма простого и кровавого узла.
+ */
 function simpleKnot2(n){
 	let code = [
 		"p o ", 2+2*n +0.5,
@@ -39,6 +53,9 @@ function simpleKnot2(n){
 	
 }
 
+/**
+ * Схема 2, обобщение
+ */
 function doubleSimpleKnot(n, m){
 	let code = [
 		"p",

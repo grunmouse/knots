@@ -7,6 +7,11 @@ const {
 	intersectMatrix
 } = require('./polyline.js');
 
+const {
+	roundedBoldstroke,
+	maxRoundRadius	
+} = require('./rounded.js');
+
 function splitEdges(arr){
 	let result = [], len = arr.length;
 	for(let i=1; i<len; ++i){
@@ -73,6 +78,7 @@ class LevelsDiagram{
 		let parts = this.components.map(splitByLevels).flat();
 		parts.sort((a,b)=>(a[0].z-b[0].z));
 		parts = parts.map(part=>expandEnds(part, 1));
+		
 		
 		let code = parts.map(part=>psPart(part, width, '#000000'));
 		

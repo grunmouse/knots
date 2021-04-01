@@ -1,5 +1,5 @@
-const {delta, boldstroke} = require('./polyline.js');
-const {roundedBoldstroke} = require('./rounded.js');
+const {delta, boldstroke, expandEnds} = require('./polyline.js');
+const {roundedBoldstroke, maxRoundRadius} = require('./rounded.js');
 
 function psPolyline(points, close){
 	let start = points[0];
@@ -11,8 +11,9 @@ function psPolyline(points, close){
 		[start[0], start[1], 'moveto'].join(' ') + '\n' +
 		steps.map((v, i)=>{
 			if(v.radius){
+				
 				let next = steps[i+1] || start;
-				return [v.radius, v[0], v[1], next[0], next[1], 'arcto'].join(' ');
+				return [v[0], v[1], next[0], next[1], v.radius, 'arct'].join(' ');
 			}
 			else{
 				return [v[0], v[1], 'lineto'].join(' ');
@@ -69,7 +70,10 @@ function psColor(color){
 }
 
 function psPart(part, width, strokeColor){
-	let form = psBold(part.map(v=>v.cut(2)), width, part.started, part.ended);
+	let flatPart = part.map(v=>v.cut(2));
+	maxRoundRadius(flatPart, 1);
+
+	let form = psBold(flatPart, width, part.started, part.ended);
 	let fillColor = part.color || '#FFFFFF';
 	strokeColor = strokeColor || '#000000';
 	

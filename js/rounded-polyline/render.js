@@ -1,4 +1,5 @@
 const {delta, boldstroke} = require('./polyline.js');
+const {roundedBoldstroke} = require('./rounded.js');
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 function svgPolyline(points, close){

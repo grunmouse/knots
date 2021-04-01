@@ -12,6 +12,10 @@ const {
 	doubleSimpleKnot
 } = require('./knots/simple-blood.js');
 
+const {
+	stividor
+} = require('./knots/stividor.js');
+
 const colors = [
 	"#FED6BC",
 	"#FFFADD",
@@ -36,6 +40,10 @@ async function main(){
 	await fsp.writeFile('../tex/knots/images/double-simple-1-1.eps', doRender(doubleSimpleKnot(1,1)));
 	await fsp.writeFile('../tex/knots/images/double-simple-2-2.eps', doRender(doubleSimpleKnot(2,2)));
 	await fsp.writeFile('../tex/knots/images/double-simple-3-3.eps', doRender(doubleSimpleKnot(3,3)));
+	await fsp.writeFile('../tex/knots/images/stividor-0.eps', doRender(stividor(0)));
+	await fsp.writeFile('../tex/knots/images/stividor-1.eps', doRender(stividor(1)));
+	await fsp.writeFile('../tex/knots/images/stividor-2.eps', doRender(stividor(2)));
+	await fsp.writeFile('../tex/knots/images/stividor-3.eps', doRender(stividor(3)));
 }
 
 main().catch(e=>console.log(e.stack));
