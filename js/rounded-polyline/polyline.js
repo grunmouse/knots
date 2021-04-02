@@ -1,7 +1,15 @@
 const {symbols:{SUB, ADD, MUL, DIV}} = require('@grunmouse/multioperator-ariphmetic');
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
-const binary = require("@grunmouse/binary");
 const {MapOfSet} = require('@grunmouse/special-map');
+const binary = require("@grunmouse/binary");
+
+function VectorKey(vec){
+	let buff = new Float64Array.from(vec).buffer;
+	
+	let value = binary.bigint.fromBuffer(buff);
+	
+	return value;
+}
 
 /**
  * Находит массив разностей точек
@@ -187,13 +195,7 @@ function expandEnds(part, ex){
 	return result;
 }
 
-function VectorKey(vec){
-	let buff = new Float64Array.from(vec).buffer;
-	
-	let value = bigint.fromBuffer(buff);
-	
-	return value;
-}
+
 
 module.exports = {
 	delta,

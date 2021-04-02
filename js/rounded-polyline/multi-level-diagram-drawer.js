@@ -184,6 +184,9 @@ class MultiLevelDiagramDrawer extends LevelsDiagram{
 			}
 			else if(command === "l"){
 				this.vertical(value);
+			}			
+			else if(command === "d"){
+				this.vertical(-value);
 			}
 			else if(command === "x"){
 				value*=scale;
@@ -194,6 +197,11 @@ class MultiLevelDiagramDrawer extends LevelsDiagram{
 				this.M([this._pos.x, value]);
 			}
 			else{
+				
+				if(command[0] === '_'){
+					value /= 2;
+				}
+				
 				let v = dirmap[command];
 				if(v){
 					value*=scale;

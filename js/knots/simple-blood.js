@@ -59,7 +59,7 @@ function simpleKnot2(n){
 function doubleSimpleKnot(n, m){
 	let code = [
 		"p",
-		(`o ${3*m+1} s ${n+1} w ${3*m-1} l 1 w n ${n} `).repeat(n), 
+		(`o ${2*m+n+2} s ${n+1} w ${2*m+n} l 1 w n ${n} `).repeat(n), 
 		`n ${n+1}`,
 		`o 0.5 l ${-n-2} o 0.5 s ${n+1} o 0.5 l ${n+2} o 0.5 n ${n+1} `.repeat(m),
 		"f"

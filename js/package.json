@@ -11,10 +11,12 @@
   "dependencies": {
     "@grunmouse/binary": "link:..\\..\\binary",
     "@grunmouse/cube-bezier": "link:..\\..\\cube-bezier",
+    "@grunmouse/format-recursive": "link:..\\..\\format-recursive",
     "@grunmouse/math-matrix": "link:..\\..\\math-matrix",
     "@grunmouse/math-vector": "link:..\\..\\math-vector",
     "@grunmouse/multioperator-ariphmetic": "link:..\\..\\multioperator-ariphmetic",
     "@grunmouse/special-map": "link:..\\..\\special-map",
+    "@grunmouse/stack": "link:..\\..\\stack",
     "@grunmouse/strings": "link:..\\..\\strings"
   }
 }

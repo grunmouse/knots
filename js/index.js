@@ -7,6 +7,11 @@ const {svg} = require('./svg-code.js');
 const {eps} = require('./eps-code.js');
 
 const {
+	use,
+	compile
+} = require('@grunmouse/format-recursive');
+
+const {
 	simpleKnot,
 	simpleKnot2,
 	doubleSimpleKnot
@@ -31,19 +36,33 @@ function doRender(knot){
 }
 
 
+function knotWriter(path, scheme){
+	return function(...args){
+		let code = doRender(scheme(...args));
+		let filename = path + '-' + args.join('-') + '.eps';
+		return fsp.writeFile(filename, code);
+	}
+}
+
+const scheme1 = knotWriter('../tex/knots/images/simple', simpleKnot);
+const scheme1v2 = knotWriter('../tex/knots/images/simple-v2', simpleKnot2);
+const scheme2 = knotWriter('../tex/knots/images/double-simple', doubleSimpleKnot);
+const scheme3 = knotWriter('../tex/knots/images/stividor', stividor);
+
 async function main(){
-	await fsp.writeFile('../tex/knots/images/simple.eps', doRender(simpleKnot(0)));
-	await fsp.writeFile('../tex/knots/images/blood-1.eps', doRender(simpleKnot(1)));
-	await fsp.writeFile('../tex/knots/images/blood-2.eps', doRender(simpleKnot(2)));
-	await fsp.writeFile('../tex/knots/images/simple-v2.eps', doRender(simpleKnot2(0)));
-	await fsp.writeFile('../tex/knots/images/blood-1-v2.eps', doRender(simpleKnot2(1)));
-	await fsp.writeFile('../tex/knots/images/double-simple-1-1.eps', doRender(doubleSimpleKnot(1,1)));
-	await fsp.writeFile('../tex/knots/images/double-simple-2-2.eps', doRender(doubleSimpleKnot(2,2)));
-	await fsp.writeFile('../tex/knots/images/double-simple-3-3.eps', doRender(doubleSimpleKnot(3,3)));
-	await fsp.writeFile('../tex/knots/images/stividor-0.eps', doRender(stividor(0)));
-	await fsp.writeFile('../tex/knots/images/stividor-1.eps', doRender(stividor(1)));
-	await fsp.writeFile('../tex/knots/images/stividor-2.eps', doRender(stividor(2)));
-	await fsp.writeFile('../tex/knots/images/stividor-3.eps', doRender(stividor(3)));
+	await Promise.all([0,1,2].map((i)=>scheme1(i)));
+	await Promise.all([0,1,2].map((i)=>scheme1v2(i)));
+	await Promise.all([0,1,2,3].map((i)=>scheme3(i)));
+	await Promise.all([
+		[1,1],
+		[2,1],
+		[2,2],
+		[2,3],
+		[3,1],
+		[3,2],
+		[3,3]
+	].map((i)=>scheme2(...i)));
+
 }
 
 main().catch(e=>console.log(e.stack));
