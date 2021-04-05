@@ -1,6 +1,7 @@
 const binary = require("@grunmouse/binary");
-const {sortLines} = require('../graph-line.js');
 const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
+
+const extendVector = require('./extend-vector.js');
 
 function getKey(vec){
 	let buff = new Float64Array.from(vec).buffer;

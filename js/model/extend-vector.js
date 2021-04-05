@@ -1,4 +1,10 @@
 
+/**
+ * @property radius : Number - радиус скругления точки
+ * @property starting : Boolean - закрытие точки начала
+ * @property ending : Boolean - закрытие точки конца
+ */
+
 const keys = ['radius', 'starting', 'ending'];
 
 
@@ -10,7 +16,7 @@ function setprops(result, map){
 }
 
 /**
- * Клонирует объект и добавляет в него свойства
+ * Клонирует объект и добавляет в него свойства точки полилинии
  */
 function extendVector(source, name, value){
 	if(typeof name === 'object'){

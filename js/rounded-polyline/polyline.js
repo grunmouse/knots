@@ -139,34 +139,6 @@ function intersectMatrix(parts){
 }
 
 /**
- * Делит трёхмерную ломаную со слоями массив плоских ломаных
- */
-function splitByLevels(component){
-	const parts = [];
-	
-	let part, level;
-	
-	for(let point of component){
-		if(level !== point.z){
-			part = [];
-			part.color = component.color;
-			level = point.z;
-			parts.push(part);
-		}
-		part.push(point);
-	}
-	if(component.ended){
-		part.ended = true;
-	}
-	if(component.started){
-		parts[0].started = true;
-	}
-	
-	//console.log(levels.map(level=>level.map(part=>expandEnds(part, 1))));
-	return parts;
-}
-
-/**
  * Возвращает новую ломаную с удлинёнными концами
  * @param part : Array<Vector2>
  * @param ex : Number - длина удлинения
@@ -192,20 +164,6 @@ function expandEnds(part, ex){
 	return result;
 }
 
-/**
- * Собирает из произвольных кусков ломаных связные компоненты (ориентируется на равенство концевых точек)
- */
-function assemblyConnectedComponents(components){
-	let map = mapOfVectors(parts.flat());
-	let parts = convertToKeys(components);
-	let {opened, closed} = sortLines(components);
-	
-	[opened, closed] = convertToVectors([opened, closed], map);
-	
-	return opened.concat(closed);
-}
-
-
 function isCollinear([A, B], [C, D], eps){
 	let cosDiff = Vector.cosDiff(B.sub(A), D.sub(C));
 	cosDiff = Math.abs(cosDiff);
@@ -229,7 +187,6 @@ module.exports = {
 	boldstroke,
 	intersectLinePart,
 	intersectMatrix,
-	splitByLevels,
 	expandEnds,
 	isCollinear,
 	wasLongest

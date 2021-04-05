@@ -8,193 +8,15 @@ const {Vector, Vector2, Vector3} = require('@grunmouse/math-vector');
 
 const extendVector = require('./extend-vector.js');
 
-function cyclicSubarr(arr, index, length){
-	let len = arr.length;
-	while(index >= len){
-		index -= len;
-	}
-	if(index < 0){
-		index = len - index;
-	}
-	
-	if(index + length > len){
-		length = index + length - len;
-		let first = arr.slice(index);
-		let last = arr.slice(0, length);
-		let result = first.concat(last);
-		return result;
-	}
-	else{
-		return arr.slice(index, length);
-	}
-}
+const Part = require('./part.js');
+const FlatPart = require('./flat-part.js');
 
-function cyclicSplice(arr, index, deleteCount, ...items){
-	let len = arr.length;
-	while(index >= len){
-		index -= len;
-	}
-	if(index<0){
-		index = len - index;
-	}
-	
-	if(deleteCount === 0){
-		if(index === 0){
-			arr.push(...items);
-		}
-		else{
-			arr.splice(index, 0, ...items);
-		}
-		return [];
-	}
-	else if(index + deleteCount > len){
-		deleteCount = index + deleteCount - len;
-		
-		if(deleteCount > index){
-			deleteCount = index;
-		}
-		
-		let first = arr.splice(index, len, ...items);
-		let last = arr.splice(0, deleteCount);
-		return first.concat(last);
-	}
-	else{
-		return arr.splice(index, deleteCount, ...items);
-	}
-}
-
-function extendedSubarr(arr, index, length){
-	let head, body, tail, len = arr.length;
-	
-	if(length === 0){
-		return [];
-	}
-
-	if(index>=len){
-		return new Array(length).fill(undefined);
-	}
-
-	if(index < 0){
-		if(length <= -index){
-			return new Array(length).fill(undefined);
-		}
-		head = new Array(-index).fill(undefined);
-		index = 0;
-	}
-	else{
-		head = [];
-	}
-	
-	if(index + length > len){
-		tail = new Array(index + length - len).fill(undefined);
-		length = len - index;
-	}
-	else{
-		tail = [];
-	}
-	
-	body = arr.slice(index, index+length);
-	
-	return head.concat(body, tile);
-}
-
-function extendedSplice(arr, index, deleteCount, ...items){
-	let head, body, tail, len = arr.length;
-	
-	if(index<0){
-		head = new Array(-index).fill(undefined);
-		arr.unshift(...head);
-	}
-	else{
-		head = [];
-	}
-	
-	if(index + deleteCount > len){
-		tail = new Array(index + length - len).fill(undefined);
-		arr.pop(...tail);
-	}
-	else{
-		tail = [];
-	}
-	
-	index += head.length;
-	
-	return arr.splice(index, deleteCount, ...items);
-	
-}
 
 /**
  * @class LayeredComponent
  * Представляет связную компоненту многослойной диаграммы
  */
-class LayeredComponent extends Array {
-	
-	clone(){
-		let result = this.slice(0);
-		result.closed = this.closed;
-		result.color = this.color;
-	}
-	
-	get closed(){
-		return this._closed;
-	}
-	
-	set closed(value){
-		this._closed = value;
-		if(value){
-			this.started = false;
-			this.ended = false;
-		}
-	}
-	
-	get started(){
-		return !this.closed && this[0].starting;
-	}
-	
-	set started(value){
-		if(value && this.closed){
-			throw new Error('Closed component can not by started');
-		}
-		this[0] = extendVector(this[0], 'starting', !!value);
-	}
-	
-	get ended(){
-		return !this.closed && this[this.length-1].ending;
-	}
-	
-	set ended(value){
-		if(value && this.closed){
-			throw new Error('Closed component can not by ended');
-		}
-		this[this.length-1] = extendVector(this[this.length-1], 'ending', !!value);
-	}
-	
-	concat(...items){
-		let result = super.concat(...items);
-		result.started = this.started;
-		result.ended = items[items.length-1].ended;
-	}
-	
-	/**
-	 * Возвращает подмассив
-	 */
-	subarr(index, length){
-		if(this.closed){
-			return cyclicSubarr(this, index, length);
-		}
-		else{
-			return extendedSubarr(this, index, lenght);
-		}
-	}
-	
-	esplice(index, deleteCount, ...items){
-		if(this.closed){
-			return cyclicSplice(this, index, deleteCount, ...items);
-		}
-		else{
-			return extendedSplice(this, index, deleteCount, ...items);
-		}
-	}
+class LayeredComponent extends Part {
 	
 	isZ(index){
 		let [A, B] = this.subarr(index, 2);
@@ -368,25 +190,28 @@ class LayeredComponent extends Array {
 		
 		for(let point of this){
 			if(level !== point.z){
-				part = new LayeredComponent();
-				part.color = color;
 				level = point.z;
+				part = new FlatPart();
+				part.color = color;
+				part.z = level;
 				parts.push(part);
 			}
 			part.push(point);
 		}
 		
 		let first = parts[0];
-		if(this.closed && first[0].z === part[0].z){
-			parts.pop();
-			parts[0] = part.concat(first);
+		if(this.closed){
+			if(first.z === part.z){
+				parts.pop();
+				parts[0] = part.concat(first);
+			}
 		}
 		else{
 			if(this.ended){
 				part.ended = true;
 			}
 			if(this.started){
-				parts[0].started = true;
+				first.started = true;
 			}
 		}
 		
@@ -407,7 +232,6 @@ class LayeredComponent extends Array {
 	
 	
 	renderToSCAD(){
-		//console.log(this.edges());
 		let body = 
 			this.edges().map(([p1, p2])=>(`edge([${p1.join(',')}],[${p2.join(',')}]);`))
 			.concat(this.map((p)=>(`point([${p.join(',')}]);`)))

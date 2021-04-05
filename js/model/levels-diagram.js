@@ -1,6 +1,7 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 const {svgPart} = require('./render.js');
 const {psPart} = require('./ps-render.js');
+const 
 const {
 	splitByLevels,
 	expandEnds,
@@ -11,6 +12,15 @@ const {
 	roundedBoldstroke,
 	maxRoundRadius	
 } = require('./rounded.js');
+
+const {
+	mapOfVectors,
+	convertToKeys,
+	convertToVectors
+} = require('./vector-map.js');
+
+const LayeredComponent = require('./layered-component.js');
+
 
 function splitEdges(arr){
 	let result = [], len = arr.length;
@@ -40,7 +50,7 @@ class LevelsDiagram{
 	}
 	
 	edges(){
-		return this.components.map(splitEdges).flat();
+		return this.components.map(cmp.edges()).flat();
 	}
 	
 	intersect(){
@@ -50,9 +60,32 @@ class LevelsDiagram{
 		let matrix = intersectMatrix(lines2);
 	}
 	
+	
+	assemblyConnectedComponents(components){
+		let map = mapOfVectors(this.points());
+		let parts = convertToKeys(components);
+		let {opened, closed} = sortLines(parts);
+		
+		opened = opened.map((arr)=>{
+			let cmp = LayeredComponent.from(arr.map(convertToVectors));
+			cmp.cotrolOrder();
+			return cmp;
+		});
+
+		closed = closed.map((arr)=>{
+			let cmp = LayeredComponent.from(arr.map(convertToVectors));
+			cmp.closed = true;
+			return cmp;
+		});
+		
+		return new LevelsDiagram(opened.concat(closed));
+	}
+	
+	
+	
 	rectangleArea(ex){
 		ex =  ex || 0;
-		let points = this.components.flat();
+		let points = this.points();
 		let x = points.map(v=>v.x);
 		let y = points.map(v=>v.y);
 		x.sort((a,b)=>(a-b));
@@ -65,35 +98,22 @@ class LevelsDiagram{
 	}
 
 	
-	render(codePart){
-		let parts = this.components.map(splitByLevels).flat();
+	render2d(partRender){
+		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
 		parts.sort((a,b)=>(a[0].z-b[0].z));
 		parts = parts.map(part=>expandEnds(part, 1));
-		
-		let code = parts.map(part=>codePart(part));
+
+		let code = parts.map(part=>partRender(part));
 		
 		return code.join('\n');
 	}
 	
 	renderToSVG(width){
-		let parts = this.components.map(splitByLevels).flat();
-		parts.sort((a,b)=>(a[0].z-b[0].z));
-		parts = parts.map(part=>expandEnds(part, 1));
-		
-		let code = parts.map(part=>svgPart(part, width, 'black'));
-		
-		return code.join('\n');
+		return this.render2d(part=>svgPart(part, width, 'black'));
 	}
 	
 	renderToPS(width){
-		let parts = this.components.map(splitByLevels).flat();
-		parts.sort((a,b)=>(a[0].z-b[0].z));
-		parts = parts.map(part=>expandEnds(part, 1));
-		
-		
-		let code = parts.map(part=>psPart(part, width, '#000000'));
-		
-		return code.join('\n');
+		return this.render2d(part=>psPart(part, width, '#000000'));
 	}
 	
 	renderToSCAD(width){
