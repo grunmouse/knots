@@ -1,17 +1,15 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
-const {svgPart} = require('./render.js');
-const {psPart} = require('./ps-render.js');
-const 
+const {svgPart,psPart} = require('../render/index.js');
+
+
 const {
-	splitByLevels,
-	expandEnds,
 	intersectMatrix
-} = require('./polyline.js');
+} = require('../geometry/polyline.js');
 
 const {
 	roundedBoldstroke,
 	maxRoundRadius	
-} = require('./rounded.js');
+} = require('../geometry/rounded.js');
 
 const {
 	mapOfVectors,
@@ -100,9 +98,10 @@ class LevelsDiagram{
 	
 	render2d(partRender){
 		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
-		parts.sort((a,b)=>(a[0].z-b[0].z));
-		parts = parts.map(part=>expandEnds(part, 1));
-
+		
+		parts.sort((a,b)=>(a.z-b.z));
+		parts = parts.map(part=>part.expandEnds(1));
+		
 		let code = parts.map(part=>partRender(part));
 		
 		return code.join('\n');

@@ -1,5 +1,5 @@
-const Drawer = require('../rounded-polyline/two-level-diagram-drawer.js');
-const Drawer2 = require('../rounded-polyline/multi-level-diagram-drawer.js');
+const Drawer = require('../model/two-level-diagram-drawer.js');
+const Drawer2 = require('../model/multi-level-diagram-drawer.js');
 
 function doRepeat(str){
 	return str.replace(/\(([^)]*)\)\[(\d+)\]/g, (str, item, n)=>{

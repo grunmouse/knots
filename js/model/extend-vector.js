@@ -9,7 +9,7 @@ const keys = ['radius', 'starting', 'ending'];
 
 
 function setprops(result, map){
-	for(let key in keys){
+	for(let key of keys){
 		result[key] = map[key];
 	}
 	return result;
@@ -26,6 +26,7 @@ function extendVector(source, name, value){
 		}
 		else{
 			let result = new source.constructor(...source);
+			console.log(result);
 			for(let key of keys){
 				if(key in map){
 					result[key] = map[key];

@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50mm"
-   height="25mm"
-   viewBox="-5 -10 50 25"
+   width="90mm"
+   height="40mm"
+   viewBox="-5 -25 90 40"
    version="1.1"
    >
 
@@ -19,38 +19,22 @@
     </marker>
 </defs>
 
-<path d="M 6.5,-1 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 6.5,-1 l 3.5,0 l 3.5,0 M 6.5,1 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 16.5,-1 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 16.5,-1 l 3.5,0 l 3.5,0 M 16.5,1 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 26.5,-1 l 3.5,0 l 6,0 l 0,12 l -4.5,0 l 0,-2 l 2.5,0 l 0,-8 l -4,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 26.5,-1 l 3.5,0 l 6,0 l 0,12 l -4.5,0 M 26.5,1 l 3.5,0 l 4,0 l 0,8 l -2.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 28.5,-4 l -2.5,0 l 0,15 l -4.5,0 l 0,-2 l 2.5,0 l 0,-15 l 4.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 28.5,-4 l -2.5,0 l 0,15 l -4.5,0 M 28.5,-6 l -4.5,0 l 0,15 l -2.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 18.5,-4 l -2.5,0 l 0,15 l -4.5,0 l 0,-2 l 2.5,0 l 0,-15 l 4.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 18.5,-4 l -2.5,0 l 0,15 l -4.5,0 M 18.5,-6 l -4.5,0 l 0,15 l -2.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 8.5,-4 l -2.5,0 l 0,8 l 4,0 l 3.5,0 l 0,2 l -3.5,0 l -6,0 l 0,-12 l 4.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 8.5,-4 l -2.5,0 l 0,8 l 4,0 l 3.5,0 M 8.5,-6 l -4.5,0 l 0,12 l 6,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 16.5,4 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 16.5,4 l 3.5,0 l 3.5,0 M 16.5,6 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 26.5,4 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 26.5,4 l 3.5,0 l 3.5,0 M 26.5,6 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M -1,-1 l 6,0 l 3.5,0 l 0,2 l -3.5,0 l -6,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M -1,-1 l 6,0 l 3.5,0 M -1,1 l 6,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 11.5,-1 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 11.5,-1 l 3.5,0 l 3.5,0 M 11.5,1 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 21.5,-1 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 21.5,-1 l 3.5,0 l 3.5,0 M 21.5,1 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 33.5,11 l -4.5,0 l 0,-15 l -2.5,0 l 0,-2 l 4.5,0 l 0,15 l 2.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 33.5,11 l -4.5,0 l 0,-15 l -2.5,0 M 33.5,9 l -2.5,0 l 0,-15 l -4.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 23.5,11 l -4.5,0 l 0,-15 l -2.5,0 l 0,-2 l 4.5,0 l 0,15 l 2.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 23.5,11 l -4.5,0 l 0,-15 l -2.5,0 M 23.5,9 l -2.5,0 l 0,-15 l -4.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 13.5,11 l -4.5,0 l 0,-15 l -2.5,0 l 0,-2 l 4.5,0 l 0,15 l 2.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 13.5,11 l -4.5,0 l 0,-15 l -2.5,0 M 13.5,9 l -2.5,0 l 0,-15 l -4.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 11.5,4 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 11.5,4 l 3.5,0 l 3.5,0 M 11.5,6 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 21.5,4 l 3.5,0 l 3.5,0 l 0,2 l -3.5,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 21.5,4 l 3.5,0 l 3.5,0 M 21.5,6 l 3.5,0 l 3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
-<path d="M 31.5,4 l 3.5,0 l 6,0 l 0,2 l -6,0 l -3.5,0 Z" fill="#FED6BC" stroke="none" />
-<path d="M 31.5,4 l 3.5,0 l 6,0 l 0,2 l -6,0 l -3.5,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 64,-1 l 5,0 l 0,-18 l -5,0 l 0,-2 l 7,0 l 0,22 l -7,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 64,-1 l 5,0 l 0,-18 l -5,0 M 64,1 l 7,0 l 0,-22 l -7,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 56,11 l -7,0 l 0,-30 l -5,0 l 0,-2 l 7,0 l 0,30 l 5,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 56,11 l -7,0 l 0,-30 l -5,0 M 56,9 l -5,0 l 0,-30 l -7,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 36,11 l -7,0 l 0,-30 l -5,0 l 0,-2 l 7,0 l 0,30 l 5,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 36,11 l -7,0 l 0,-30 l -5,0 M 36,9 l -5,0 l 0,-30 l -7,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 16,11 l -7,0 l 0,-22 l 7,0 l 0,2 l -5,0 l 0,18 l 5,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 16,11 l -7,0 l 0,-22 l 7,0 M 16,9 l -5,0 l 0,-18 l 5,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M -1,-1 l 67,0 l 0,2 l -67,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M -1,-1 l 67,0 M -1,1 l 67,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 14,-11 l 67,0 l 0,2 l -67,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 14,-11 l 67,0 l 0,2 l -67,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 66,-19 l -5,0 l 0,30 l -7,0 l 0,-2 l 5,0 l 0,-30 l 7,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 66,-19 l -5,0 l 0,30 l -7,0 M 66,-21 l -7,0 l 0,30 l -5,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 46,-19 l -5,0 l 0,30 l -7,0 l 0,-2 l 5,0 l 0,-30 l 7,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 46,-19 l -5,0 l 0,30 l -7,0 M 46,-21 l -7,0 l 0,30 l -5,0" fill="none" stroke="black" style="stroke-width:0.25" />
+<path d="M 26,-19 l -5,0 l 0,30 l -7,0 l 0,-2 l 5,0 l 0,-30 l 7,0 Z" fill="#FFFFFF" stroke="none" />
+<path d="M 26,-19 l -5,0 l 0,30 l -7,0 M 26,-21 l -7,0 l 0,30 l -5,0" fill="none" stroke="black" style="stroke-width:0.25" />
 </svg>

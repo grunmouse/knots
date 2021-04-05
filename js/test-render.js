@@ -1,8 +1,8 @@
 const fsp = require('fs').promises;
 
-const {svg} = require('./svg-code.js');
-const {eps} = require('./eps-code.js');
-const {scad} = require('./scad-code.js');
+const {svg, eps, scad} = require('./render/index.js');
+
+
 
 const {
 	use,
@@ -19,9 +19,9 @@ const {
 async function main(){
 	let knot = simpleKnot2(2);
 	
-	let code = knot.renderToSCAD(2);
-	
-	await fsp.writeFile('exp.scad', scad(code));
+	await fsp.writeFile('exp.scad', scad(knot.renderToSCAD(2)));
+	await fsp.writeFile('exp.svg', svg(knot.renderToSVG(2), knot.rectangleArea(5)));
+	await fsp.writeFile('exp.eps', eps(knot.renderToPS(2), knot.rectangleArea(5)));
 
 }
 

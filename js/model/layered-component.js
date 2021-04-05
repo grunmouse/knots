@@ -2,7 +2,7 @@ const {
 	intersectLinePart,
 	isCollinear,
 	wasLongest
-} = require('./polyline.js');
+} = require('../geometry/polyline.js');
 
 const {Vector, Vector2, Vector3} = require('@grunmouse/math-vector');
 
@@ -196,7 +196,7 @@ class LayeredComponent extends Part {
 				part.z = level;
 				parts.push(part);
 			}
-			part.push(point);
+			part.push(extendVector(point.cut(2), point));
 		}
 		
 		let first = parts[0];
@@ -215,6 +215,7 @@ class LayeredComponent extends Part {
 			}
 		}
 		
+		//console.log(parts);
 		//console.log(levels.map(level=>level.map(part=>expandEnds(part, 1))));
 		return parts;
 	}

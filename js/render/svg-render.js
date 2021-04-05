@@ -1,4 +1,4 @@
-const {delta, boldstroke} = require('./polyline.js');
+const {delta, boldstroke} = require('../geometry/polyline.js');
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 function svgPolyline(points, close){
@@ -53,7 +53,9 @@ function svgBold(points, width, isStart, isEnd){
 }
 
 function svgPart(part, width, strokeColor){
-	let form = svgBold(part.map(v=>v.cut(2)), width, part.started, part.ended);
+	//console.log(part);
+	
+	let form = svgBold(part, width, part.started, part.ended);
 	let fillColor = part.color || '#FFFFFF';
 	strokeColor = strokeColor || '#000000';
 	

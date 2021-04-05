@@ -9,8 +9,11 @@ const {Vector, Vector2, Vector3} = require('@grunmouse/math-vector');
 
 const extendVector = require('./extend-vector.js');
 
+const Part = require('./part.js');
+
 class FlatPart extends Part{
 	expandEnds(ex){
+		
 		if(this.closed){
 			return this;
 		}
@@ -24,7 +27,10 @@ class FlatPart extends Part{
 		let D1 = D.add(dD1);
 		
 		A1 = extendVector(A1, A);
-		D1 = extendVector(D1, A);
+		D1 = extendVector(D1, D);
+		
+		//console.log(A1, A);
+		//console.log(D1, D);
 		
 		let result = new FlatPart(A1, ...this.slice(1, -1), D1);
 		

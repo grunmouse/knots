@@ -1,12 +1,5 @@
 const {symbols:{SUB, ADD, MUL, DIV}} = require('@grunmouse/multioperator-ariphmetic');
 const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
-const {MapOfSet} = require('@grunmouse/special-map');
-const binary = require("@grunmouse/binary");
-const {sortLines} = require('../graph-line.js');
-const {
-	mapOfVectors,
-	convertToKeys
-} = require('./vector-map.js');
 
 /**
  * Находит массив разностей точек

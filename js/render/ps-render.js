@@ -1,5 +1,5 @@
-const {delta, boldstroke, expandEnds} = require('./polyline.js');
-const {roundedBoldstroke, maxRoundRadius} = require('./rounded.js');
+const {delta, boldstroke, expandEnds} = require('../geometry/polyline.js');
+const {roundedBoldstroke, maxRoundRadius} = require('../geometry/rounded.js');
 
 function psPolyline(points, close){
 	let start = points[0];
