@@ -2,14 +2,15 @@ const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 
 const LevelsDiagram = require('./levels-diagram.js');
+const LayeredComponent = require('./layered-component.js');
 
 const dirmap = require('./dirmap.js');
 
 class MultiLevelDiagramDrawer extends LevelsDiagram{
 	constructor(){
 		super([]);
-		this.z = 1;
-		this._pos = new Vector3(0,0,1);
+		this.z = 0;
+		this._pos = new Vector3(0,0,0);
 		this._append = false;
 		this._color = "#FFFFFF";
 		this.drawing = false;
@@ -49,7 +50,7 @@ class MultiLevelDiagramDrawer extends LevelsDiagram{
 			this.lastComponent.push(point);
 		}
 		else{
-			this.components.push([this._pos, point]);
+			this.components.push(LayeredComponent.from([this._pos, point]));
 			this._append = true;
 			this.drawing = true;
 		}
@@ -183,9 +184,11 @@ class MultiLevelDiagramDrawer extends LevelsDiagram{
 				this.end();
 			}
 			else if(command === "l"){
+				value*=scale;
 				this.vertical(value);
 			}			
 			else if(command === "d"){
+				value*=scale;
 				this.vertical(-value);
 			}
 			else if(command === "x"){

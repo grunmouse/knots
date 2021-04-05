@@ -64,6 +64,17 @@ class LevelsDiagram{
 		];
 	}
 
+	
+	render(codePart){
+		let parts = this.components.map(splitByLevels).flat();
+		parts.sort((a,b)=>(a[0].z-b[0].z));
+		parts = parts.map(part=>expandEnds(part, 1));
+		
+		let code = parts.map(part=>codePart(part));
+		
+		return code.join('\n');
+	}
+	
 	renderToSVG(width){
 		let parts = this.components.map(splitByLevels).flat();
 		parts.sort((a,b)=>(a[0].z-b[0].z));
@@ -83,6 +94,14 @@ class LevelsDiagram{
 		let code = parts.map(part=>psPart(part, width, '#000000'));
 		
 		return code.join('\n');
+	}
+	
+	renderToSCAD(width){
+		let code = `radius = ${width/2};`;
+		
+		let comp = this.components.map(a=>a.renderToSCAD()).join('\n');
+		
+		return code + '\n' + comp;
 	}
 }
 

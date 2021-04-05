@@ -1,15 +1,12 @@
 const {symbols:{SUB, ADD, MUL, DIV}} = require('@grunmouse/multioperator-ariphmetic');
-const {Vector3, Vector2} = require('@grunmouse/math-vector');
+const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
 const {MapOfSet} = require('@grunmouse/special-map');
 const binary = require("@grunmouse/binary");
-
-function VectorKey(vec){
-	let buff = new Float64Array.from(vec).buffer;
-	
-	let value = binary.bigint.fromBuffer(buff);
-	
-	return value;
-}
+const {sortLines} = require('../graph-line.js');
+const {
+	mapOfVectors,
+	convertToKeys
+} = require('./vector-map.js');
 
 /**
  * Находит массив разностей точек
@@ -195,6 +192,34 @@ function expandEnds(part, ex){
 	return result;
 }
 
+/**
+ * Собирает из произвольных кусков ломаных связные компоненты (ориентируется на равенство концевых точек)
+ */
+function assemblyConnectedComponents(components){
+	let map = mapOfVectors(parts.flat());
+	let parts = convertToKeys(components);
+	let {opened, closed} = sortLines(components);
+	
+	[opened, closed] = convertToVectors([opened, closed], map);
+	
+	return opened.concat(closed);
+}
+
+
+function isCollinear([A, B], [C, D], eps){
+	let cosDiff = Vector.cosDiff(B.sub(A), D.sub(C));
+	cosDiff = Math.abs(cosDiff);
+	return 1 - cosDiff <= eps;
+}
+
+//скрещивающиеся skew
+
+function wasLongest([A, B], [C, D]){
+	let AB = A.sub(B).abs(), CD = C.sub(D).abs();
+	return AB - CD;
+}
+
+
 
 
 module.exports = {
@@ -205,5 +230,7 @@ module.exports = {
 	intersectLinePart,
 	intersectMatrix,
 	splitByLevels,
-	expandEnds
+	expandEnds,
+	isCollinear,
+	wasLongest
 };
