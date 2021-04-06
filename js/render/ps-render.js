@@ -70,8 +70,8 @@ function psColor(color){
 }
 
 function psPart(part, width, strokeColor){
-	let flatPart = part.map(v=>v.cut(2));
-	maxRoundRadius(flatPart, 1);
+	let flatPart = part;
+	//maxRoundRadius(flatPart, 1);
 
 	let form = psBold(flatPart, width, part.started, part.ended);
 	let fillColor = part.color || '#FFFFFF';

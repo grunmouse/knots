@@ -1,15 +1,13 @@
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
-const {svgPart,psPart} = require('../render/index.js');
 
+const {MapOfSet} = require('@grunmouse/special-map');
 
 const {
-	intersectMatrix
+	intersectMatrix,
+	intersectLinePart,
+	sorterByDirection
 } = require('../geometry/polyline.js');
 
-const {
-	roundedBoldstroke,
-	maxRoundRadius	
-} = require('../geometry/rounded.js');
 
 const {
 	mapOfVectors,
@@ -48,16 +46,79 @@ class LevelsDiagram{
 	}
 	
 	edges(){
-		return this.components.map(cmp.edges()).flat();
+		return this.components.map(cmp=>cmp.edges()).flat();
 	}
 	
-	intersect(){
+	hasEdge(A, B){
+		return this.components.some(cmp=>cmp.hasEdge(A, B));
+	}
+	
+	addSkewPoints(){
 		let lines = this.edges().filter((edge)=>(edge[0].z === edge[1].z));
-		let lines2 = lines.map((edge)=>(edge.map(Vector2.from)));
+		let lines2 = lines.map((edge)=>(edge.map((v)=>v.cut(2))));
 		
 		let matrix = intersectMatrix(lines2);
+		
+		//console.log(matrix);
+		
+		console.log(matrix.every((row, i)=>(row.every((val, j)=>(val == null || val.eq(matrix[j][i]))))));
+		
+		let len = matrix.length;
+		
+		let adding = matrix.map((row, i)=>{
+			let points = row.filter((a)=>(a));
+			points.sort(sorterByDirection(lines2[i]));
+			if(points.length){
+				let line = lines[i];
+				points = points.map((p)=>(p.extend(line[0].z)));
+				
+				if(points.length && points[0].eq(line[0])){
+					points.shift();
+				}
+				if(points.length && points[points.length-1].eq(line[1])){
+					points.pop();
+				}
+				
+				if(points.length){
+					
+					return {line, points};
+				}
+			}
+		}).filter((a)=>(a));
+		
+		adding.sort((a, b)=>(b.line.index - a.line.index));
+		
+		adding.forEach(({line, points})=>{
+			line.parent.esplice(line.index, 0, ...points);
+		});
+		
+		//console.log(this);
 	}
 	
+	annoteSkews(){
+		let points = this.points();
+		let points2 = points.map(p=>p.cut(2));
+		let keys = convertToKeys(points2);
+		let map = new MapOfSet();
+		keys.forEach((key, i)=>{
+			map.add(key, points[i]);
+		});
+		for(let [key, set] of map.entries()){
+			if(set.size === 2){
+				if(this.hasEdge(...set)){
+				}
+				else{
+					let [A, B] = [...set];
+					A.skew = B;
+					B.skew = A;
+				}
+			}
+			else if(set.size > 2){
+				throw new Error('Тройная точка ' + set);
+			}
+		}
+		
+	}
 	
 	assemblyConnectedComponents(components){
 		let map = mapOfVectors(this.points());
@@ -66,7 +127,7 @@ class LevelsDiagram{
 		
 		opened = opened.map((arr)=>{
 			let cmp = LayeredComponent.from(arr.map(convertToVectors));
-			cmp.cotrolOrder();
+			cmp.controlOrder();
 			return cmp;
 		});
 
@@ -98,9 +159,8 @@ class LevelsDiagram{
 	
 	render2d(partRender){
 		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
-		
 		parts.sort((a,b)=>(a.z-b.z));
-		parts = parts.map(part=>part.expandEnds(1));
+		parts = parts.map(part=>part.roundedMaxRadius(1,0.01).expandEnds(1));
 		
 		let code = parts.map(part=>partRender(part));
 		
@@ -108,11 +168,11 @@ class LevelsDiagram{
 	}
 	
 	renderToSVG(width){
-		return this.render2d(part=>svgPart(part, width, 'black'));
+		return this.render2d(part=>part.renderSVG(width));
 	}
 	
 	renderToPS(width){
-		return this.render2d(part=>psPart(part, width, '#000000'));
+		return this.render2d(part=>part.renderPS(width));
 	}
 	
 	renderToSCAD(width){

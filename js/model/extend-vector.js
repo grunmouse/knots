@@ -5,12 +5,17 @@
  * @property ending : Boolean - закрытие точки конца
  */
 
-const keys = ['radius', 'starting', 'ending'];
+const keys = ['radius', 'starting', 'ending', 'skew'];
 
 
 function setprops(result, map){
 	for(let key of keys){
-		result[key] = map[key];
+		if(map[key] == null){
+			delete result[key];
+		}
+		else{
+			result[key] = map[key];
+		}
 	}
 	return result;
 }
@@ -26,7 +31,7 @@ function extendVector(source, name, value){
 		}
 		else{
 			let result = new source.constructor(...source);
-			console.log(result);
+			
 			for(let key of keys){
 				if(key in map){
 					result[key] = map[key];

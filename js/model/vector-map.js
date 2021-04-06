@@ -4,7 +4,7 @@ const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
 const extendVector = require('./extend-vector.js');
 
 function getKey(vec){
-	let buff = new Float64Array.from(vec).buffer;
+	let buff = Float64Array.from(vec).buffer;
 	
 	let value = binary.bigint.fromBuffer(buff);
 	

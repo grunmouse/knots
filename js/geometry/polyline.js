@@ -13,6 +13,7 @@ function delta(arr){
 	return res;
 }
 
+
 /**
  * Возвращает массив накопленных сумм значений входного массива
  */
@@ -24,6 +25,38 @@ function accum(start, arr){
 	}
 	return res;
 }
+
+/**
+ * Находит четвёртую точку прямоугольного дельтоида, у которого углы B и D прямые
+ */
+function deltoid(B, A, D){
+	let AD = D.sub(A);
+	let ort = B.sub(A).add(AD).ort();
+	let AC = ort.mul(AD.dot(ort));
+	
+	return A.add(AC);
+}
+
+/**
+ * отсекает на угле BAD равнобедренный угол B'AD' со сторонами a
+ */
+function isosceles(B, A, D, a){
+	let B1 = B.sub(A).ort().mul(a).add(A);
+	let D1 = D.sub(A).ort().mul(a).add(A);
+	return [B1, A, D1];
+}
+
+/**
+ * отсекает на угле BAD равнобедренный угол B'AD', описанный около дуги радиусом r
+ */
+function isoradial(B, A, D, r){
+	let cos = Vector.cosDiff(B.sub(A), D.sub(A));
+	let tan = Math.tan(Math.acos(cos));
+	let a = r / tan;
+	
+	return isosceles(B, A, D, a);
+}
+
 
 function onedistanceABC(A, B, C){
 	const AB = B.sub(A), BC = C.sub(B);
@@ -71,17 +104,36 @@ function boldstroke(B, s){
 
 /**
  * Проверяет, попадает ли точка R в прямоугольную область между вершинами AB
- * Если подставить коллинеарные вектора - это будет проверка на R \in AB
  */
 function isIn(R, [A, B]){
 	let AR = R.sub(A), AB = B.sub(A);
-	
 	for(let i=0; i<R.length; ++i){
 		if(AR[i]<0 || AR[i]>AB[i]){
 			return false;
 		}
 	}
+	
 	return true;
+}
+
+/**
+ *
+ * Проверка на R \in AB
+ */
+function isInPart(R, [A, B]){
+	let AR = R.sub(A), AB = B.sub(A);
+	let proj = AR.dot(AB)/AB.abs();
+	
+	return proj>=0 && proj<=AB.abs();
+}
+
+function sorterByDirection([A, B]){
+	let AB = B.sub(A);
+	return (P, Q)=>{
+		let p = P.sub(A).dot(AB);
+		let q = Q.sub(A).dot(AB);
+		return p-q;
+	}
 }
 
 /**
@@ -102,13 +154,11 @@ function intersectLine([A, B], [C, D]){
 	*/
 	
 	let N = W.cross(V); //Знаменатель выражения
-	
 	//Проверка нуля
-	let ctrl = N.div(W.dot(V));
+	let ctrl = Math.abs(N / W.dot(V));
 	if(ctrl < Number.EPSILON){
 		return undefined;
 	}
-	
 	const R = V.mul(D.cross(C)).sub(W.mul(B.cross(A))).div(N);
 	
 	return R;
@@ -119,14 +169,17 @@ function intersectLine([A, B], [C, D]){
  */
 function intersectLinePart(AB, CD){
 	const R = intersectLine(AB, CD);
-	if(R && isIn(R, AB) && isIn(R, CD)){
-		return R;
+	if(R){
+		if(isInPart(R, AB) && isInPart(R, CD)){
+			return R;
+		}
+		//console.log(AB, CD, R);
 	}
 }
 
 function intersectMatrix(parts){
-	const result = Array.from(parts, 
-		(AB)=>Array.from(parts, (CD)=>(intersectLinePart(AB, CD)))
+	const result = parts.map( 
+		(AB)=>parts.map((CD)=>(intersectLinePart(AB, CD)))
 	);
 	return result;
 }
@@ -157,10 +210,16 @@ function expandEnds(part, ex){
 	return result;
 }
 
+/**
+ * @param AB : Array[2]<Vector> - первый отрезок
+ * @param CD : Array[2]<Vector> - второй отрезок
+ * @param eps : number - порог значения синуса, ниже которого он считается нулевым
+ */
 function isCollinear([A, B], [C, D], eps){
-	let cosDiff = Vector.cosDiff(B.sub(A), D.sub(C));
-	cosDiff = Math.abs(cosDiff);
-	return 1 - cosDiff <= eps;
+	eps = eps || 0.01;
+	let cos = Vector.cosDiff(B.sub(A), D.sub(C));
+	let sin = Math.sqrt(1 - cos**2);
+	return sin <= eps;
 }
 
 //скрещивающиеся skew
@@ -176,11 +235,16 @@ function wasLongest([A, B], [C, D]){
 module.exports = {
 	delta,
 	accum,
+	isosceles,
+	isoradial,
+	deltoid,
 	onedistanceABC,
 	boldstroke,
+	isInPart,
 	intersectLinePart,
 	intersectMatrix,
-	expandEnds,
+	sorterByDirection,
+	//expandEnds,
 	isCollinear,
 	wasLongest
 };

@@ -42,11 +42,6 @@ class LayeredComponent extends Part {
 		}
 	}
 	
-	isCollinear(index, eps){
-		let [A, B, C] = this.subarr(index-1, 3);
-		return !!A && !!C && isCollinear([A, B], [B, C], eps);
-	}
-	
 	moveZtoMiddleRight(index){
 		let [A, B, C] = this.subarr(index, 3);
 		//AB || z
@@ -223,10 +218,16 @@ class LayeredComponent extends Part {
 	edges(){
 		let result = [], len = this.length;
 		for(let i=1; i<len; ++i){
-			result.push([this[i-1], this[i]]);
+			let edge = [this[i-1], this[i]];
+			edge.parent = this;
+			edge.index = i;
+			result.push(edge);
 		}
 		if(this.closed){
-			result.push([this[len-1], this[0]]);
+			let edge = [this[len-1], this[0]];
+			edge.parent = this;
+			edge.index = 0;
+			result.push(edge);
 		}
 		return result;
 	}
@@ -239,7 +240,7 @@ class LayeredComponent extends Part {
 			.join('\n');
 		
 		if(this.color){
-			return `color(${this.color}){
+			return `color("${this.color}"){
 ${body}
 }`;
 		}

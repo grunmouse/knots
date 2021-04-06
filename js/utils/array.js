@@ -86,7 +86,7 @@ function extendedSubarr(arr, index, length){
 	
 	body = arr.slice(index, index+length);
 	
-	return head.concat(body, tile);
+	return head.concat(body, tail);
 }
 
 function extendedSplice(arr, index, deleteCount, ...items){

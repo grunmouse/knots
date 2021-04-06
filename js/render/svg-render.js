@@ -53,7 +53,6 @@ function svgBold(points, width, isStart, isEnd){
 }
 
 function svgPart(part, width, strokeColor){
-	//console.log(part);
 	
 	let form = svgBold(part, width, part.started, part.ended);
 	let fillColor = part.color || '#FFFFFF';
