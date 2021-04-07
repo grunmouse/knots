@@ -1,0 +1,53 @@
+<MAIN> := PROG <EOF>;
+
+PROG := S PROG;
+PROG := S;
+
+S := REP;
+S := STAT;
+
+STAT := command;
+STAT := command ARGS;
+
+REP := { PROG } [ EXP ];
+
+ARGS := ARGS , SUBARGS;
+ARGS := SUBARGS;
+
+SUBARGS := spreed varname;
+SUBARGS := spreed ( EXP );
+SUBARGS := ARG;
+
+ARG := EXP;
+
+EXP := SUMM;
+EXP := ots SUMM;
+
+SUMM := SUMMAND ots SUMM;
+SUMM := SUMMAND;
+
+SUMMAND := MULT;
+SUMMAND := otm MULT;
+
+MULT := MULTIPLIER;
+MULT := MULT otm MULTIPLIER;
+MULT := MONOM;
+
+MULTIPLIER := POW;
+
+POW := BASE otp POWER;
+POW := OPERAND;
+
+BASE := OPERAND;
+POWER := OPERAND;
+POWER := MONOM;
+
+OPERAND := ( EXP );
+OPERAND := FUNCALL;
+OPERAND := value;
+OPERAND := varname;
+
+FUNCALL := funname ( ARGS );
+
+MONOM := value varname;
+MONOM := value varname otp value;

@@ -17,6 +17,7 @@
     "@grunmouse/multioperator-ariphmetic": "link:..\\..\\multioperator-ariphmetic",
     "@grunmouse/special-map": "link:..\\..\\special-map",
     "@grunmouse/stack": "link:..\\..\\stack",
-    "@grunmouse/strings": "link:..\\..\\strings"
+    "@grunmouse/strings": "link:..\\..\\strings",
+    "@grunmouse/syntax-lr0": "link:..\\..\\syntax-lr0"
   }
 }

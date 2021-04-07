@@ -92,7 +92,7 @@ class LevelsDiagram{
 			line.parent.esplice(line.index, 0, ...points);
 		});
 		
-		//console.log(this);
+		this.annoteSkews();
 	}
 	
 	annoteSkews(){
@@ -109,8 +109,10 @@ class LevelsDiagram{
 				}
 				else{
 					let [A, B] = [...set];
-					A.skew = B;
-					B.skew = A;
+					A.skew = true;
+					B.skew = true;
+					A.skewlink = B;
+					B.skewlink = A;
 				}
 			}
 			else if(set.size > 2){

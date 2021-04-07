@@ -8,6 +8,7 @@ dependencies:
   '@grunmouse/special-map': link:../../special-map
   '@grunmouse/stack': link:../../stack
   '@grunmouse/strings': link:../../strings
+  '@grunmouse/syntax-lr0': link:../../syntax-lr0
 lockfileVersion: 5.2
 specifiers:
   '@grunmouse/binary': link:..\..\binary
@@ -19,3 +20,4 @@ specifiers:
   '@grunmouse/special-map': link:..\..\special-map
   '@grunmouse/stack': link:..\..\stack
   '@grunmouse/strings': link:..\..\strings
+  '@grunmouse/syntax-lr0': link:..\..\syntax-lr0
