@@ -1,6 +1,6 @@
 <MAIN> := PROG <EOF>;
 
-PROG := S PROG;
+PROG := PROG S;
 PROG := S;
 
 S := REP;
@@ -14,20 +14,22 @@ REP := { PROG } [ EXP ];
 ARGS := ARGS , SUBARGS;
 ARGS := SUBARGS;
 
-SUBARGS := spreed varname;
-SUBARGS := spreed ( EXP );
+SUBARGS := SPREED;
 SUBARGS := ARG;
 
+SPREED := spreed varname;
 ARG := EXP;
 
 EXP := SUMM;
-EXP := ots SUMM;
+EXP := SIGNED;
+SIGNED := ots SUMM;
 
 SUMM := SUMMAND ots SUMM;
 SUMM := SUMMAND;
 
 SUMMAND := MULT;
-SUMMAND := otm MULT;
+SUMMAND := RATIONAL;
+RATIONAL := otm MULT;
 
 MULT := MULTIPLIER;
 MULT := MULT otm MULTIPLIER;
