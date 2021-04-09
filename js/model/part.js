@@ -83,7 +83,7 @@ class ComponentPart extends Array {
 	
 	controlOrder(){
 		if(!this.closed){
-			if(this[0].ending || this[this.lenght-1].starting){
+			if(this[0].ending || this[this.length-1].starting){
 				this.reverse();
 			}
 		}

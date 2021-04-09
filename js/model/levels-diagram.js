@@ -17,14 +17,7 @@ const {
 
 const LayeredComponent = require('./layered-component.js');
 
-
-function splitEdges(arr){
-	let result = [], len = arr.length;
-	for(let i=1; i<len; ++i){
-		result.push([arr[i-1], arr[i]]);
-	}
-	return result;
-}
+const {sortLines} = require('../graph/index.js').graph2;
 
 /**
  * Представляет схему узла в виде трёхмерной ломаной линии, 
@@ -57,17 +50,19 @@ class LevelsDiagram{
 	 * Добавляет на компоненты точки перекрещивания разноуовневых звеньев
 	 */
 	addSkewPoints(){
+		
 		let lines = this.edges().filter((edge)=>(edge[0].z === edge[1].z));
+		
 		let lines2 = lines.map((edge)=>(edge.map((v)=>v.cut(2))));
 		
 		let matrix = intersectMatrix(lines2);
-		
 		
 		let len = matrix.length;
 		
 		let adding = matrix.map((row, i)=>{
 			let points = row.filter((a)=>(a));
 			points.sort(sorterByDirection(lines2[i]));
+			points = points.filter((p, i)=>(i===0 || !p.eq(points[i-1]))); //Фильтруем уникальные точки
 			if(points.length){
 				let line = lines[i];
 				points = points.map((p)=>(p.extend(line[0].z)));
@@ -85,7 +80,7 @@ class LevelsDiagram{
 				}
 			}
 		}).filter((a)=>(a));
-		
+		//console.log(adding);
 		adding.sort((a, b)=>(b.line.index - a.line.index));
 		
 		adding.forEach(({line, points})=>{
@@ -95,8 +90,12 @@ class LevelsDiagram{
 		this.annoteSkews();
 	}
 	
+	/**
+	 * Найти и обозначить двойные точки, не принадлежащие вертикалям
+	 */
 	annoteSkews(){
 		let points = this.points();
+		//console.log(points);
 		let points2 = points.map(p=>p.cut(2));
 		let keys = convertToKeys(points2);
 		let map = new MapOfSet();
@@ -116,33 +115,11 @@ class LevelsDiagram{
 				}
 			}
 			else if(set.size > 2){
-				throw new Error('Тройная точка ' + set);
+				console.log(set);
+				throw new Error('Тройная точка ' + [...set]);
 			}
 		}
 		
-	}
-	
-	/**
-	 * Собрать воедино смежные компоненты
-	 */
-	assemblyConnectedComponents(components){
-		let map = mapOfVectors(this.points());
-		let parts = convertToKeys(components);
-		let {opened, closed} = sortLines(parts);
-		
-		opened = opened.map((arr)=>{
-			let cmp = LayeredComponent.from(arr.map(convertToVectors));
-			cmp.controlOrder();
-			return cmp;
-		});
-
-		closed = closed.map((arr)=>{
-			let cmp = LayeredComponent.from(arr.map(convertToVectors));
-			cmp.closed = true;
-			return cmp;
-		});
-		
-		return new LevelsDiagram(opened.concat(closed));
 	}
 	
 	joinCollinears(eps){
@@ -157,6 +134,36 @@ class LevelsDiagram{
 		this.components.forEach(cmp=>cmp.moveAllZoutAngle(eps));
 	}
 	
+	/**
+	 * Собрать воедино смежные компоненты
+	 */
+	assemblyConnectedComponents(){
+		let map = mapOfVectors(this.points());
+		let parts = convertToKeys(this.components);
+		let {opened, closed} = sortLines(parts);
+		//console.log({opened, closed})
+		opened = opened.map((arr)=>{
+			let cmp = LayeredComponent.from(convertToVectors(arr, map));
+			cmp.controlOrder();
+			return cmp;
+		});
+
+		closed = closed.map((arr)=>{
+			let cmp = LayeredComponent.from(convertToVectors(arr, map));
+			cmp.closed = true;
+			return cmp;
+		});
+		
+		return new LevelsDiagram(opened.concat(closed));
+	}	
+	
+	scale(xy, z){
+		return new LevelsDiagram(this.components.map(cmp=>cmp.scale(xy,z)));
+	}
+	
+	mirrorZ(){
+		return new LevelsDiagram(this.components.map(cmp=>cmp.mirrorZ()));
+	}
 	
 	rectangleArea(ex){
 		ex =  ex || 0;

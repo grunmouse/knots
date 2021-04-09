@@ -1,22 +1,16 @@
 const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
 
-const dirmap = require('./dirmap.js');
 const DrawerBase = require('./dsl/index.js');
 
 const LevelsDiagram = require('../model/levels-diagram.js');
 const LayeredComponent = require('../model/layered-component.js');
 
+const dirmap = require('./dirmap.js');
 
 const lib = {
 	com:{
 		log(...arg){
 			console.log(...arg);
-		},
-		scale(xy, z){
-
-		},
-		zscale(z){
-
 		},
 		draw(){
 			this.drawing = true;
@@ -24,49 +18,68 @@ const lib = {
 		move(){
 			this.drawing = false;
 		},
-		u(){
-			this.up();
+		u(z){
+			if(z === 0){
+				return;
+			}
+			z = z || 1;
+			z = this.level + z;
+			this.goLevel(z);
 		},
-		d(){
-			this.down();
-		},
-		h(){
-			this.swaplevel();
+		d(z){
+			if(z === 0){
+				return;
+			}
+			z = z || 1;
+			z = this.level - z;
+			this.goLevel(z);
 		},
 		go(x, y){
 			let pos;
 			if(x instanceof Vector){
-				pos = x.cut(2).extend(this.z);
+				pos = x.cut(2).extend(this.pos.z);
 			}
 			else{
-				pos = new Vector(x, y, this.z);
+				pos = new Vector(x, y, this.pos.z);
 			}
 			this.go(pos);
 		},
 		level(z){
-			let pos;
 			if(z instanceof Vector){
 				z = z[2];
 			}
-			let level = Math.round(z/this.zscale);
-			if(level !== this.level){
-				this.swaplevel();
-			}
+			this.goLevel(z);
 		},
-		defpos(varname){
+		savepos(varname){
 			let name = varname.raw;
 			this.vars.set(name, this.pos);
+		},
+		"let":function(varname, value){
+			let name = varname.raw;
+			this.vars.set(name, value);
 		},
 		f(){
 			this.lastComponent.ended = true;
 		}
 	},
 	fun:{
+		xy(vec){
+			return vec.cut(2);
+		},
+		z(vec){
+			return vec.z;
+		},
+		vec(x, y, z){
+			return new Vector3(x, y, z);
+		}
 	}
 };
 
 for(let key in dirmap){
 	lib.com[key] = function(len){
+		if(len === 0){
+			return;
+		}
 		len = len || 1;
 		let step = dirmap[key].mul(len).extend(0);
 		let pos = this.pos.add(step);
@@ -74,8 +87,9 @@ for(let key in dirmap){
 	}
 }
 
+lib.com.l = lib.com.u;
 
-class TwoLevelDrawer extends DrawerBase(lib){
+class MultiLevelDrawer extends DrawerBase(lib){
 	constructor(){
 		super();
 		this._append = false;
@@ -88,8 +102,11 @@ class TwoLevelDrawer extends DrawerBase(lib){
 	}
 	
 	lineto(pos){
+		if(!pos instanceof Vector3){
+			throw new Error('Incorrect class!');
+		}
 		if(this._append){
-			this.lastComponent().push(pos);
+			this.lastComponent.push(pos);
 			this.pos = pos;
 		}
 		else{
@@ -112,25 +129,10 @@ class TwoLevelDrawer extends DrawerBase(lib){
 		}
 	}
 	
-	up(){
-		if(this.level === 0){
-			let pos = this.pos.cut(2).extend(1);
-			this.go(pos);
-			return true;
-		}
-	}
-	
-	down(){
-		if(this.level === 1){
-			let pos = this.pos.cut(2).extend(0);
-			this.go(pos);
-			return true;
-		}
-	}
-	
-	swaplevel(){
-		this.up() || this.down();
+	goLevel(z){
+		let pos = new Vector(this.pos.x, this.pos.y, z);
+		this.go(pos);
 	}
 }
 
-module.exports = TwoLevelDrawer;
+module.exports = MultiLevelDrawer;

@@ -222,6 +222,22 @@ class LayeredComponent extends Part {
 		return result;
 	}
 	
+	/**
+	 * Создаёт новый компонент, масштабируя текущий
+	 */
+	scale(sxy, sz){
+		sxy = sxy || 1;
+		sz = sz || 1;
+		return this.map((vec)=>extendVector(new Vector3(vec.x*sxy, vec.y*sxy, vec.z*sz), vec));
+	}
+	
+	/**
+	 * Создаёт новый компонент, отражая текущий по оси z
+	 */
+	mirrorZ(){
+		return this.scale(1,-1);
+	}
+	
 	
 	renderToSCAD(){
 		let body = 

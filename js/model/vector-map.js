@@ -19,7 +19,9 @@ function joinParamInto(into, name, a, b, callback){
 	callback = callback || ((a, b)=>(a));
 	let result;
 	if(!a){
-		result = b;
+		if(b != null){
+			result = b;
+		}
 	}
 	else if(!b){
 		result = a;
@@ -38,7 +40,7 @@ function joinExtVectors(a, b){
 	if(a === b){
 		return a;
 	}
-	let result = Vector.from(a);
+	let result = a.constructor.from(a);
 	joinParamInto(result, 'radius', a, b, Math.min);
 	joinParamInto(result, 'starting', a, b, ()=>(false));
 	joinParamInto(result, 'ending', a, b, ()=>(false));
@@ -68,7 +70,7 @@ function convertToKeys(arr){
 			return getKey(a);
 		}
 		else if(Array.isArray(a)){
-			return convertToKey(arr);
+			return convertToKeys(a);
 		}
 		else{
 			return a;
@@ -82,7 +84,7 @@ function convertToVectors(arr, map){
 			return map.get(a);
 		}
 		else if(Array.isArray(a)){
-			return convertToVectors(arr, map);
+			return convertToVectors(a, map);
 		}
 		else{
 			return a;

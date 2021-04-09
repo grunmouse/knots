@@ -5,11 +5,13 @@ const promisify = require('util').promisify;
 const child_process = require('child_process');
 const exec = promisify(child_process.exec);
 
-const Drawer = require('./drawer/two-level-drawer.js');
+const Drawer = require('./drawer/multi-level-drawer.js');
 
 const LevelsDiagram = require('./model/levels-diagram.js');
 
 const {svg, eps, scad} = require('./render/index.js');
+
+require('util').inspect.defaultOptions.depth = 20;
 
 const colors = [
 	"#FED6BC",
@@ -25,16 +27,21 @@ function drawScheme(filename){
 		let env = Drawer.draw(code, params);
 
 		let knot = new LevelsDiagram(env.components);
-		return knot
+		return knot;
 	}
 }
 
 
 async function main(){
-	let knot = drawScheme('scheme1.txt')({a:1});
-
+	let knot = drawScheme('scheme5.txt')({a:2,b:2});
+	
+	
+	knot = knot.scale(10, 10);
+	
+	knot = knot.assemblyConnectedComponents();
+	
 	knot.addSkewPoints();
-
+	
 	knot.components[0].color = colors[0];
 	fs.writeFileSync('exp.scad', scad(knot.renderToSCAD(2)));
 	knot.moveAllZoutAngle();

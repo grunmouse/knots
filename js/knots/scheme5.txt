@@ -1,0 +1,35 @@
+/*
+Схема 5 - симметричные стивидорные узлы
+@param a - сколько раз перекручена калышка
+@param b - сколько шлагов в неё заведено
+*/
+
+draw
+o
+savepos B
+{
+	u so d
+	move w draw
+	no
+}[a]
+u
+o 2*b + 3
+s 2
+d
+w 2*b + 2
+nw
+move
+go B
+level B
+s
+draw
+u
+s
+o a
+no
+o d 2 s 2
+{
+	o u 2 n 2
+	o d 2 s 2
+}[b]
+f

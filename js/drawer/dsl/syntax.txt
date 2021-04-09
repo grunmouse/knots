@@ -10,6 +10,7 @@ STAT := command;
 STAT := command ARGS;
 
 REP := { PROG } [ EXP ];
+REP := { } [ EXP ];
 
 ARGS := ARGS , SUBARGS;
 ARGS := SUBARGS;
@@ -21,15 +22,16 @@ SPREED := spreed varname;
 ARG := EXP;
 
 EXP := SUMM;
-EXP := SIGNED;
-SIGNED := ots SUMM;
 
-SUMM := SUMMAND ots SUMM;
+SUMM := SIGNED;
+SIGNED := ots SUMMAND;
+
+SUMM := SUMM ots SUMMAND;
 SUMM := SUMMAND;
 
 SUMMAND := MULT;
-SUMMAND := RATIONAL;
-RATIONAL := otm MULT;
+MULT := RATIONAL;
+RATIONAL := otm MULTIPLIER;
 
 MULT := MULTIPLIER;
 MULT := MULT otm MULTIPLIER;

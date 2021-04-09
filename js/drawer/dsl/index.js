@@ -1,6 +1,7 @@
 
 const makeLexer = require('./lexer.js');
 const EnvironmentBase = require('./evaluate.js');
+const {inspect} = require('util');
 let trans = require('./translator.js');
 
 function DrawerBase(lib){
@@ -13,14 +14,14 @@ function DrawerBase(lib){
 			this.components = [];
 		}
 		
-		lastComponent(){
+		get lastComponent(){
 			return this.components[this.components.length -1];
 		}
 		
 		static draw(code, params){
 			let tokens = lexer(code);
 			let ast = trans(tokens);
-			
+			//console.log(inspect(ast, {depth:20, colors:true}));
 			const env = new this();
 			if(params){
 				for(let key in params){

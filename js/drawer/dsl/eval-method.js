@@ -8,6 +8,9 @@ function createEval(mapping){
 			throw new Error('Item is undefined');
 		}
 		let type = item.type;
+		if(!item.type){
+			throw new Error('Invalid item: ' + JSON.stringify(item));
+		}
 		let len = item.data && item.data.length
 		let fun = len && mapping[type + ' ' + len] || mapping[type];
 		let result;

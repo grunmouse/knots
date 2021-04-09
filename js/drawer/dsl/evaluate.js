@@ -26,6 +26,7 @@ const mapping = {
 	},
 	"REP":(env, ast)=>{
 		let prog = ast.data[1];
+		if(!prog.data) return;
 		let count = ast.data[4];
 		count = env.eval(count, true);
 		for(let i=0; i<count; ++i){
@@ -112,12 +113,6 @@ const mapping = {
 		args = env.eval(args, true);
 		
 		return env.funcall(name, args);
-	},
-	"MONOM 2":(env, {data})=>{
-		let [value, varname] = data;
-		value = env.eval(value);
-		varname = env.eval(varname, true);
-		return value[MUL](varname);
 	}
 };
 

@@ -4,7 +4,6 @@
 @param a - количество дополнительных шлагов
 */
 
-scale 10,10
 draw
 o 2 u no
 {d so u no}[a]
