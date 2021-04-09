@@ -1,6 +1,7 @@
 
 
 const reTokens = /([a-z][a-z\d]*)|(\d+(?:\.\d*)?|\.\d+)|(\.{3})|(\*[*/])|([*/])|([-+])|([{}\[\](),])/gi;
+const reComment = /\/\*(?:[^*]*|\*(?!\/))*\*\//g;
 
 const types = [
 	,
@@ -10,7 +11,7 @@ const types = [
 	'otp',
 	'otm',
 	'ots'
-]
+];
 
 /*
 	1. name
@@ -25,6 +26,7 @@ const types = [
 function makeLexer(lib){
 
 	function *lexer(str){
+		str = str.replace(reComment, '');
 		reTokens.lastIndex = 0;
 		let item = reTokens.exec(str);
 		while(item){
@@ -55,6 +57,8 @@ function makeLexer(lib){
 			item = reTokens.exec(str);
 		}
 	}
+	
+	return lexer;
 
 }
 module.exports = makeLexer;

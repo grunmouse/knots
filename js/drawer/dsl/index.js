@@ -19,7 +19,7 @@ function DrawerBase(lib){
 		
 		static draw(code, params){
 			let tokens = lexer(code);
-			let ast = trasn(tokens);
+			let ast = trans(tokens);
 			
 			const env = new this();
 			if(params){
@@ -30,11 +30,9 @@ function DrawerBase(lib){
 			
 			let result = env.eval(ast);
 			
-			if(result == null){
-				result = env;
-			}
+			env.returned = result;
 			
-			return result;
+			return env;
 			
 		}
 	}

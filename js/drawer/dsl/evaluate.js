@@ -112,6 +112,12 @@ const mapping = {
 		args = env.eval(args, true);
 		
 		return env.funcall(name, args);
+	},
+	"MONOM 2":(env, {data})=>{
+		let [value, varname] = data;
+		value = env.eval(value);
+		varname = env.eval(varname, true);
+		return value[MUL](varname);
 	}
 };
 

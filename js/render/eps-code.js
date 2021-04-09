@@ -1,5 +1,7 @@
 function eps(body, area){
 	let [A, B] = area;
+	A = A.mul(72/25.4);
+	B = B.mul(72/25.4);
 	let size = B.sub(A);
 	
 	let box = [A.x, A.y, B.x, B.y].join(' ');
@@ -13,6 +15,7 @@ function eps(body, area){
 %%BeginProlog
 save
 gsave
+72 25.4 div dup scale %Мы любим миллиметры
 2 setlinecap
 2 setlinejoin
 0.25 setlinewidth

@@ -38,7 +38,7 @@ class LevelsDiagram{
 	
 	constructor(components){
 		components = components || [];
-		this.components = Array.from(components);
+		this.components = Array.from(components, (cmp)=>(LayeredComponent.from(cmp)));
 	}
 	
 	points(){
@@ -53,15 +53,15 @@ class LevelsDiagram{
 		return this.components.some(cmp=>cmp.hasEdge(A, B));
 	}
 	
+	/**
+	 * Добавляет на компоненты точки перекрещивания разноуовневых звеньев
+	 */
 	addSkewPoints(){
 		let lines = this.edges().filter((edge)=>(edge[0].z === edge[1].z));
 		let lines2 = lines.map((edge)=>(edge.map((v)=>v.cut(2))));
 		
 		let matrix = intersectMatrix(lines2);
 		
-		//console.log(matrix);
-		
-		console.log(matrix.every((row, i)=>(row.every((val, j)=>(val == null || val.eq(matrix[j][i]))))));
 		
 		let len = matrix.length;
 		
@@ -122,6 +122,9 @@ class LevelsDiagram{
 		
 	}
 	
+	/**
+	 * Собрать воедино смежные компоненты
+	 */
 	assemblyConnectedComponents(components){
 		let map = mapOfVectors(this.points());
 		let parts = convertToKeys(components);
@@ -142,6 +145,17 @@ class LevelsDiagram{
 		return new LevelsDiagram(opened.concat(closed));
 	}
 	
+	joinCollinears(eps){
+		this.components.forEach(cmp=>cmp.joinCollinears(eps));
+	}
+	
+	moveAllZtoAngle(eps){
+		this.components.forEach(cmp=>cmp.moveAllZtoAngle(eps));
+	}
+	
+	moveAllZoutAngle(eps){	
+		this.components.forEach(cmp=>cmp.moveAllZoutAngle(eps));
+	}
 	
 	
 	rectangleArea(ex){
@@ -162,7 +176,7 @@ class LevelsDiagram{
 	render2d(partRender){
 		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
 		parts.sort((a,b)=>(a.z-b.z));
-		parts = parts.map(part=>part.roundedMaxRadius(1,0.01).expandEnds(1));
+		parts = parts.map(part=>part.roundedMaxRadius(0,0.01).expandEnds(1));
 		
 		let code = parts.map(part=>partRender(part));
 		

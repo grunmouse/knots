@@ -3,6 +3,10 @@ const {Vector3, Vector2, Vector} = require('@grunmouse/math-vector');
 const dirmap = require('./dirmap.js');
 const DrawerBase = require('./dsl/index.js');
 
+const LevelsDiagram = require('../model/levels-diagram.js');
+const LayeredComponent = require('../model/layered-component.js');
+
+
 const lib = {
 	com:{
 		log(...arg){
@@ -59,6 +63,9 @@ const lib = {
 		defpos(varname){
 			let name = varname.raw;
 			this.vars.set(name, this.pos);
+		},
+		f(){
+			this.lastComponent.ended = true;
 		}
 	},
 	fun:{
@@ -69,7 +76,7 @@ for(let key in dirmap){
 	lib.com[key] = function(len){
 		len = len || 1;
 		len *= this.scale;
-		let step = dirmap[key].mul(len);
+		let step = dirmap[key].mul(len).extend(0);
 		let pos = this.pos.add(step);
 		this.go(pos);
 	}
@@ -97,7 +104,7 @@ class TwoLevelDrawer extends DrawerBase(lib){
 			this.pos = pos;
 		}
 		else{
-			this.components.push([this.pos, pos]);
+			this.components.push(new LayeredComponent(this.pos, pos));
 			this._append = true;
 			this.pos = pos;
 		}

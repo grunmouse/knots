@@ -84,12 +84,6 @@ class LayeredComponent extends Part {
 			return;
 		}
 		
-		//CD || z
-
-		if(!B && !E){
-			return ;
-		}
-		
 		let isAngleB = this.isAngle(index-1);
 		let isAngleE = this.isAngle(index+2);
 		if(isAngleB && isAngleE){
@@ -120,10 +114,6 @@ class LayeredComponent extends Part {
 
 	moveZoutAngle(index, eps){
 		
-		if(!B && !E){
-			return ;
-		}
-		
 		if(!this.isAngle(index, eps)){
 			return ;
 		}
@@ -143,7 +133,7 @@ class LayeredComponent extends Part {
 				this.moveZtoMiddleLeft(index);
 			}
 			else{
-				this.moveZtoMiddleLeft(index);
+				this.moveZtoMiddleRight(index);
 			}
 		}
 		

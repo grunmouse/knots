@@ -33,7 +33,6 @@ RATIONAL := otm MULT;
 
 MULT := MULTIPLIER;
 MULT := MULT otm MULTIPLIER;
-MULT := MONOM;
 
 MULTIPLIER := POW;
 
@@ -42,7 +41,6 @@ POW := OPERAND;
 
 BASE := OPERAND;
 POWER := OPERAND;
-POWER := MONOM;
 
 OPERAND := ( EXP );
 OPERAND := FUNCALL;
@@ -50,6 +48,3 @@ OPERAND := value;
 OPERAND := varname;
 
 FUNCALL := funname ( ARGS );
-
-MONOM := value varname;
-MONOM := value varname otp value;
