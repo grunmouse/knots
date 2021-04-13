@@ -136,7 +136,7 @@ class ComponentPart extends Array {
 	 * Добавляет среднюю точку отрезка, в позицию index (между index-1 и бывшим index)
 	 */
 	addMiddle(index){
-		let [A, B] = this.subarray(index-1, 2);
+		let [A, B] = this.subarr(index-1, 2);
 		let C = A.add(B).div(2);
 		this.splice(index, 0, C);
 	}
@@ -173,6 +173,16 @@ class ComponentPart extends Array {
 			}
 			if(index != 0){
 				this.rot(index);
+			}
+		}
+	}
+	
+	killPins(){
+		for(let i = 0; i<this.length; ++i){
+			let [A, B, C] = this.subarr(i-1, 3);
+			if(A && C && A.eq(C)){
+				this.esplice(i, 2);
+				i-=2;
 			}
 		}
 	}

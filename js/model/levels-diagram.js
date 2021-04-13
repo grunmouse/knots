@@ -144,12 +144,14 @@ class LevelsDiagram{
 		//console.log({opened, closed})
 		opened = opened.map((arr)=>{
 			let cmp = LayeredComponent.from(convertToVectors(arr, map));
+			cmp.killPins();
 			cmp.controlOrder();
 			return cmp;
 		});
 
 		closed = closed.map((arr)=>{
 			let cmp = LayeredComponent.from(convertToVectors(arr, map));
+			cmp.killPins();
 			cmp.closed = true;
 			return cmp;
 		});

@@ -60,6 +60,53 @@ const lib = {
 		},
 		f(){
 			this.lastComponent.ended = true;
+		},
+		setdir(vec){
+			if(!vec instanceof Vector3){
+				throw new TypeError('Direction can by Vector3!');
+			}
+			this.dir = vec;
+		},
+		/**
+		 * size - размер косы
+		 * com - номер пересечения
+		 */
+		braid(size, com){
+			let I = this.dir;
+			let J = new Vector(-I.y, I.x, 0);
+			let start = [this.pos], fin = [];
+			
+			let up, down;
+			
+			if(com<0){
+				up = Math.abs(com);
+				down = up - 1;
+			}
+			else if(com>0){
+				up = com-1;
+				down = com;
+			}
+			
+			
+			for(let i = 0; i<size; ++i){
+				if(i>0){
+					start[i] = start[i-1].add(J);
+				}
+				fin[i] = start[i].add(I);
+				if( i!== up && i!== down ){
+					this.components.push([start[i], fin[i]]);
+				}
+			}
+			if(com !== 0){
+				this.components.push([start[up], fin[down]]);
+				this.components.push([
+					start[down], 
+					start[down].add(new Vector3(0, 0, -1)),
+					fin[up].add(new Vector3(0, 0, -1)),
+					fin[up]
+				]);
+			}
+			this.pos = this.pos.add(I);
 		}
 	},
 	fun:{
@@ -71,9 +118,15 @@ const lib = {
 		},
 		vec(x, y, z){
 			return new Vector3(x, y, z);
+		},
+		orto(vec){
+			let {x, y} = vec;
+			return new vec.constructor(-y, x, 0);
 		}
 	}
 };
+
+
 
 for(let key in dirmap){
 	lib.com[key] = function(len){
@@ -84,7 +137,12 @@ for(let key in dirmap){
 		let step = dirmap[key].mul(len).extend(0);
 		let pos = this.pos.add(step);
 		this.go(pos);
-	}
+	};
+	lib.fun[key.toUpperCase()] = function(len){
+		len = len || 1;
+		let step = dirmap[key].mul(len).extend(0);
+		return step;
+	};
 }
 
 lib.com.l = lib.com.u;
@@ -95,6 +153,7 @@ class MultiLevelDrawer extends DrawerBase(lib){
 		this._append = false;
 		this.pos = Vector3.O();
 		this.drawing = false;
+		this.dir = new Vector(1, 0, 0);
 	}
 	
 	get level(){

@@ -109,8 +109,13 @@ const mapping = {
 		}
 	},
 	"FUNCALL":(env, {data})=>{
-		let name = data[0], args = data[3];
-		args = env.eval(args, true);
+		let name = data[0].raw, args = data[2];
+		if(args.type === 'ARGS'){
+			args = env.eval(args, true);
+		}
+		else{
+			args = [];
+		}
 		
 		return env.funcall(name, args);
 	}

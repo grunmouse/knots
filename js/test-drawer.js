@@ -41,7 +41,7 @@ async function makePDF(knot){
 
 }
 async function main(){
-	let knot = drawScheme('scheme9.txt')({a:3,b:3});
+	let knot = drawScheme('exp1.txt')({a:3,b:3});
 	
 	
 	knot = knot.scale(10, 10);
@@ -49,10 +49,15 @@ async function main(){
 	knot = knot.assemblyConnectedComponents();
 	
 	
-	knot.components[0].color = colors[0];
+	knot.components.forEach((cmp, i)=>{
+		if(!cmp.color){
+			cmp.color = colors[i];
+		}
+	});
+	
 	fs.writeFileSync('exp.scad', scad(knot.renderToSCAD(2)));
 	
-	makePDF(knot);
+	//makePDF(knot);
 }
 
 main().catch(e=>console.log(e.stack));
