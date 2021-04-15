@@ -24,8 +24,9 @@ function svg(body, area){
    >
 
 ${DEFS}
-
+<g transform="scale(1, -1)">
 ${body}
+</g>
 </svg>`;
 
 	return code;

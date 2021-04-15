@@ -11,11 +11,10 @@ const {
 	compile
 } = require('@grunmouse/format-recursive');
 
-const {
-	simpleKnot,
-	simpleKnot2,
-	doubleSimpleKnot
-} = require('./knots/simple-blood.js');
+
+const Drawer = require('./drawer/multi-level-drawer.js');
+
+const LevelsDiagram = require('./model/levels-diagram.js');
 
 const colors = [
 	"#FED6BC",
@@ -27,16 +26,24 @@ const colors = [
 
 
 async function main(){
-	let knot = simpleKnot2(2);
-	
+	let filename = 's-01.txt';
+	let code = await fsp.readFile('./knots/'+filename, {encoding:'utf8'});
+
+	let env = Drawer.draw(code, {a:0});
+
+	let knot = new LevelsDiagram(env.components);	
+
+	knot = knot.assemblyConnectedComponents();			
 	knot.addSkewPoints();
-	knot.annoteSkews();
+	knot.moveAllZoutAngle();
+
+	knot = knot.scale(10, 10);
 	
 	knot.components[0].color = colors[0];
-	await fsp.writeFile('exp.scad', scad(knot.renderToSCAD(2)));
+	//await fsp.writeFile('exp.scad', scad(knot.renderToSCAD(2)));
 	await fsp.writeFile('exp.svg', svg(knot.renderToSVG(2), knot.rectangleArea(5)));
-	await fsp.writeFile('exp.eps', eps(knot.renderToPS(2), knot.rectangleArea(5)));
-	await exec('epstopdf exp.eps');
+	//await fsp.writeFile('exp.eps', eps(knot.renderToPS(2), knot.rectangleArea(5)));
+	//await exec('epstopdf exp.eps');
 
 }
 

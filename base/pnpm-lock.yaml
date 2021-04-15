@@ -1,5 +1,7 @@
-dependencies:
-  '@grunmouse/simple-table': 'link:../../simple-table'
-lockfileVersion: 5.1
+lockfileVersion: 5.3
+
 specifiers:
-  '@grunmouse/simple-table': 'link:..\..\simple-table'
+  '@grunmouse/simple-table': link:..\..\simple-table
+
+dependencies:
+  '@grunmouse/simple-table': link:../../simple-table

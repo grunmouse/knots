@@ -1,12 +1,53 @@
-const {delta, boldstroke} = require('../geometry/polyline.js');
+const {
+	delta, 
+	boldstroke,
+	isosceles,
+	isoradial,
+	deltoid
+} = require('../geometry/polyline.js');
+const {roundedBoldstroke, maxRoundRadius} = require('../geometry/rounded.js');
+
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
+
+
+function lineto(v){
+	//console.log(v);
+	return `L ${v.x} ${v.y}`;
+}
+
+/**
+ * Генерирует команды l и a
+ */
+function arct(A, B, C, r){
+
+	let [M, D, N] = isoradial(A, B, C, r); //Отсекаем отрезки нужной длины
+	//let O = deltoid(M, D, N); //Находим центр дуги
+	let result = [];
+	if(A.ne(M)){
+		result.push(lineto(M));
+	}
+	let signA = B.sub(A).cross(C.sub(B));
+	let sweep = signA < 0 ? 1 : 0;
+	result.push(`A ${r} ${r} 0 0 ${sweep} ${N.x} ${N.y}`);
+	
+	return result.join(' ');
+}
 
 function svgPolyline(points, close){
 	let start = points[0];
-	let steps = delta(points);
+	let steps = points.slice(1);
 
-	let code = 'M ' + start.slice(0,2).join(",") + ' '
-		+ steps.map((v)=>('l ' + v.slice(0,2).join(","))).join(' ');
+	let code = 'M ' + start.cut(2).join(",") + ' '
+		+ steps.map((v, i)=>{
+			if(v.radius){
+				let prev = points[i];
+				let next = steps[i+1] || start;
+				return arct(prev, v, next, v.radius);
+			}
+			else{
+				return lineto(v);
+			}
+		}).join(' ');
 	
 	if(close){
 		code += ' Z';
@@ -26,7 +67,7 @@ function svgPolyline(points, close){
  * @property {stroke} - код d для границы
  */
 function svgBold(points, width, isStart, isEnd){
-	const {L, R} = boldstroke(points, width/2);
+	const {L, R} = roundedBoldstroke(points, width/2);
 	
 	const fill = R.concat(L.slice(0).reverse());
 	

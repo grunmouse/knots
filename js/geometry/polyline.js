@@ -51,9 +51,8 @@ function isosceles(B, A, D, a){
  */
 function isoradial(B, A, D, r){
 	let cos = Vector.cosDiff(B.sub(A), D.sub(A));
-	let tan = Math.tan(Math.acos(cos));
+	let tan = Math.tan(Math.acos(cos)/2);
 	let a = r / tan;
-	
 	return isosceles(B, A, D, a);
 }
 
