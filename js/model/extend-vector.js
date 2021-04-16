@@ -10,14 +10,27 @@ const keys = ['radius', 'starting', 'ending', 'skew'];
 
 function setprops(result, map){
 	for(let key of keys){
-		if(map[key] == null){
-			delete result[key];
-		}
-		else{
-			result[key] = map[key];
-		}
+		setprop(result, key, map[key]);
 	}
 	return result;
+}
+
+function setprop(result, name, value){
+	if(value == null){
+		delete result[name];
+	}
+	else{
+		result[name] = value;
+	}
+	return result;
+}
+
+function setExistProps(result, map){
+	for(let key of keys){
+		if(key in map){
+			setprop(result, key, map[key]);
+		}
+	}	
 }
 
 /**
@@ -31,15 +44,8 @@ function extendVector(source, name, value){
 		}
 		else{
 			let result = new source.constructor(...source);
-			
-			for(let key of keys){
-				if(key in map){
-					result[key] = map[key];
-				}
-				else{
-					result[key] = source[key];
-				}
-			}
+			setprops(result, source);
+			setExistProps(result, map);
 			return result;
 		}
 	}
@@ -50,7 +56,8 @@ function extendVector(source, name, value){
 		else{
 			let result = new source.constructor(...source);
 			setprops(result, source);
-			result[name] = value;
+			setprop(result, name, value);
+
 			return result;
 		}
 		

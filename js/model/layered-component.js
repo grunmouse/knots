@@ -113,14 +113,14 @@ class LayeredComponent extends Part {
 	}
 
 	moveZoutAngle(index, eps){
-		
 		if(!this.isAngle(index, eps)){
 			return ;
 		}
+		//console.log(this.subarr(index, 2));
 
 		let [B, C, D, E] = this.subarr(index-1, 4);
 		//CD || z
-		
+		//console.log([B, C, D, E]);
 		if(!B){
 			this.moveZtoMiddleRight(index);
 		}
@@ -136,7 +136,16 @@ class LayeredComponent extends Part {
 				this.moveZtoMiddleRight(index);
 			}
 		}
-		
+	}
+	
+	moveZoutEnds(){
+		if(this.isZ(0)){
+			this.moveZtoMiddleRight(0);
+		}
+		if(this.isZ(this.length-2)){
+			this.moveZtoMiddleLeft(this.length-2);
+		}
+		return this;
 	}
 
 	joinCollinears(eps){
@@ -146,6 +155,7 @@ class LayeredComponent extends Part {
 				this.splice(i, 1);
 			}
 		}
+		return this;
 	}
 	
 	moveAllZtoAngle(eps){
@@ -155,6 +165,7 @@ class LayeredComponent extends Part {
 				this.moveZtoAngle(i, eps);
 			}
 		}
+		return this;
 	}
 	
 	moveAllZoutAngle(eps){
@@ -164,6 +175,7 @@ class LayeredComponent extends Part {
 				this.moveZoutAngle(i, eps);
 			}
 		}
+		return this;
 	}
 	
 	
@@ -205,21 +217,8 @@ class LayeredComponent extends Part {
 		return parts;
 	}
 	
-	edges(){
-		let result = [], len = this.length;
-		for(let i=1; i<len; ++i){
-			let edge = [this[i-1], this[i]];
-			edge.parent = this;
-			edge.index = i;
-			result.push(edge);
-		}
-		if(this.closed){
-			let edge = [this[len-1], this[0]];
-			edge.parent = this;
-			edge.index = 0;
-			result.push(edge);
-		}
-		return result;
+	hedges(){
+		return this.edges().filter(({A, B})=>(A.z === B.z));
 	}
 	
 	/**

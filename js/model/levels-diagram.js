@@ -5,7 +5,8 @@ const {MapOfSet} = require('@grunmouse/special-map');
 const {
 	intersectMatrix,
 	intersectLinePart,
-	sorterByDirection
+	sorterByDirection,
+	distanceOfLinePart
 } = require('../geometry/polyline.js');
 
 
@@ -18,6 +19,10 @@ const {
 const LayeredComponent = require('./layered-component.js');
 
 const {sortLines} = require('../graph/index.js').graph2;
+
+const {
+	rotateSkew
+} = require('../geometry/rotate.js');
 
 /**
  * Представляет схему узла в виде трёхмерной ломаной линии, 
@@ -38,8 +43,13 @@ class LevelsDiagram{
 		return this.components.flat();
 	}
 	
+	
 	edges(){
 		return this.components.map(cmp=>cmp.edges()).flat();
+	}
+	
+	hedges(){
+		return this.edges().filter((edge)=>(edge[0].z === edge[1].z));
 	}
 	
 	hasEdge(A, B){
@@ -51,7 +61,7 @@ class LevelsDiagram{
 	 */
 	addSkewPoints(){
 		
-		let lines = this.edges().filter((edge)=>(edge[0].z === edge[1].z));
+		let lines = this.hedges();
 		
 		let lines2 = lines.map((edge)=>(edge.map((v)=>v.cut(2))));
 		
@@ -108,8 +118,8 @@ class LevelsDiagram{
 				}
 				else{
 					let [A, B] = [...set];
-					A.skew = true;
-					B.skew = true;
+					A.skew = Math.sign(A.z - B.z);
+					B.skew = -A.skew;
 					A.skewlink = B;
 					B.skewlink = A;
 				}
@@ -119,20 +129,9 @@ class LevelsDiagram{
 				throw new Error('Тройная точка ' + [...set]);
 			}
 		}
-		
 	}
 	
-	joinCollinears(eps){
-		this.components.forEach(cmp=>cmp.joinCollinears(eps));
-	}
 	
-	moveAllZtoAngle(eps){
-		this.components.forEach(cmp=>cmp.moveAllZtoAngle(eps));
-	}
-	
-	moveAllZoutAngle(eps){	
-		this.components.forEach(cmp=>cmp.moveAllZoutAngle(eps));
-	}
 	
 	/**
 	 * Собрать воедино смежные компоненты
@@ -141,7 +140,7 @@ class LevelsDiagram{
 		let map = mapOfVectors(this.points());
 		let parts = convertToKeys(this.components);
 		let {opened, closed} = sortLines(parts);
-		//console.log({opened, closed})
+
 		opened = opened.map((arr)=>{
 			let cmp = LayeredComponent.from(convertToVectors(arr, map));
 			cmp.killPins();
@@ -159,14 +158,67 @@ class LevelsDiagram{
 		return new LevelsDiagram(opened.concat(closed));
 	}	
 	
-	scale(xy, z){
-		return new LevelsDiagram(this.components.map(cmp=>cmp.scale(xy,z)));
+	/**
+	 * Рассчитывает наименьшее расстояние в плане, на которое к точке M приближаются не содержащие её отрезки
+	 */
+	minDistance(M){
+		let d = this.hedges().map(edge=>{
+			if(edge.A === M || edge.A === M.skewlink){
+				return M.sub(edge.B).abs();
+			}
+			else if(edge.B === M || edge.B === M.skewlink){
+				return M.sub(edge.A).abs();
+			}
+			else{
+				let v = distanceOfLinePart(M.cut(2), edge.cut(2))
+				if(v<1){
+					//console.log(M, edge);
+				}
+				return v;
+			}
+		});
+		return Math.min(...d);
 	}
 	
-	mirrorZ(){
-		return new LevelsDiagram(this.components.map(cmp=>cmp.mirrorZ()));
+	/**
+	 * Поворачивает все скрещивания в вертикальное положение
+	 */
+	rotateSkews(){
+		const skewPoint = new Map();
+		const skewPair = [];
+		for(let cmp of this.components){
+			for(let i = 0; i < cmp.length; ++i){
+				let A = cmp[i];
+				if(A.skew){
+					skewPoint.set(A, {component:cmp, index:i});
+					let B = A.skewlink;
+					if(skewPoint.has(B)){
+						skewPair.push([
+							skewPoint.get(A),
+							skewPoint.get(B)
+						]);
+					}
+				}
+			}
+		}
+		for(let segments of skewPair){
+			let cross = segments.map((seg)=>(seg.component.subarr(seg.index - 1, 3)));
+			let m = this.minDistance(cross[0][1])*Math.SQRT1_2;
+			let newcross = rotateSkew(cross, m);
+			segments.forEach((seg, i)=>{seg.newseg = newcross[i]});
+		}
+		const toReplace = skewPair.flat();
+		toReplace.sort((a, b)=>(b.index - a.index));
+		for(let rep of toReplace){
+			let {component, index, newseg} = rep;
+			component.esplice(index-1, 3, ...newseg);
+		}
 	}
 	
+	/**
+	 * Возвращает прямоугольную область, в которой расположена диаграмма
+	 * @param ex : Number - поля по краям
+	 */
 	rectangleArea(ex){
 		ex =  ex || 0;
 		let points = this.points();
@@ -181,7 +233,14 @@ class LevelsDiagram{
 		];
 	}
 
-	
+	setColors(colors){
+		this.components.forEach((cmp, i)=>{
+			if(!cmp.color){
+				cmp.color = colors[i];
+			}
+		});
+	}
+
 	render2d(partRender){
 		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
 		parts.sort((a,b)=>(a.z-b.z));
@@ -208,5 +267,29 @@ class LevelsDiagram{
 		return code + '\n' + comp;
 	}
 }
+
+[
+	'joinCollinears',
+	'moveAllZoutAngle',
+	'moveAllZtoAngle',
+	'moveZoutEnds'
+].forEach((method)=>{
+	LevelsDiagram.prototype[method] = function(...args){
+		this.components.forEach(cmp=>cmp[method](...args));
+		return this;
+	}
+});
+
+[
+	'mirrorZ',
+	'scale',
+	'clone'
+].forEach((method)=>{
+	LevelsDiagram.prototype[method] = function(...args){
+		return new LevelsDiagram(this.components.map(cmp=>cmp[method](...args)));
+	}
+});
+
+
 
 module.exports = LevelsDiagram;

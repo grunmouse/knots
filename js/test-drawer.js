@@ -33,8 +33,9 @@ function drawScheme(filename){
 
 async function makePDF(knot){
 	knot.addSkewPoints();
-	knot.moveAllZoutAngle();
-	//fs.writeFileSync('exp1.scad', scad(knot.renderToSCAD(2)));
+	knot.moveAllZoutAngle().moveZoutEnds();
+
+	fs.writeFileSync('exp1.scad', scad(knot.renderToSCAD(2)));
 
 	await fsp.writeFile('exp.eps', eps(knot.renderToPS(2), knot.rectangleArea(5)));
 	await exec('epstopdf exp.eps'); 
@@ -43,20 +44,22 @@ async function makePDF(knot){
 async function main(){
 	let knot = drawScheme('exp1.txt')({a:3,b:3});
 	
-	
-	knot = knot.scale(10, 10);
-	
 	knot = knot.assemblyConnectedComponents();
 	
 	
-	knot.components.forEach((cmp, i)=>{
-		if(!cmp.color){
-			cmp.color = colors[i];
-		}
-	});
+	knot = knot.scale(10, 10);
+	
+	knot.addSkewPoints();
+	
+	
+	knot.setColors(colors);
+	//console.log(knot);
 	
 	fs.writeFileSync('exp.scad', scad(knot.renderToSCAD(2)));
+	knot.rotateSkews(10);
+	fs.writeFileSync('exp1.scad', scad(knot.renderToSCAD(2)));
 	
+
 	//makePDF(knot);
 }
 

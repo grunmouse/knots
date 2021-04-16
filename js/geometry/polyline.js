@@ -176,6 +176,7 @@ function intersectLinePart(AB, CD){
 	}
 }
 
+
 function intersectMatrix(parts){
 	const result = parts.map( 
 		(AB)=>parts.map((CD)=>(intersectLinePart(AB, CD)))
@@ -183,31 +184,25 @@ function intersectMatrix(parts){
 	return result;
 }
 
-/**
- * Возвращает новую ломаную с удлинёнными концами
- * @param part : Array<Vector2>
- * @param ex : Number - длина удлинения
- *
- * @return Array<Vector2>
- */
-function expandEnds(part, ex){
-	let A = part[0], B = part[1], D = part[part.length-1], C = part[part.length-2];
-	let BA = A.sub(B);
-	let CD = D.sub(C);
-	
-	let dA1 = BA.ort().mul(ex);
-	let dD1 = CD.ort().mul(ex);
-	let A1 = A.add(dA1);
-	let D1 = D.add(dD1);
-	
-	let result = [A1, ...part.slice(1, -1), D1];
-	
-	result.started = part.started;
-	result.ended = part.ended;
-	result.color = part.color;
-	
-	return result;
+function distanceOfLinePart(P, [A, B]){
+	let AB = B.sub(A);
+	let AP = P.sub(A);
+	let x = AP.dot(AB)/(AB.abs()**2);
+	if(x>0 && x<1){
+		let cos = Vector.cosDiff(AB, AP);
+		//console.log(cos);
+		let sin = Math.sqrt(1 - cos**2);
+		let d = AP.abs()*sin;
+		
+		return d;
+	}
+	else{
+		//точка не проецируется на отрезок, находим расстояние до ближайшего конца
+		return Math.min(AB.abs(), P.sub(B).abs());
+	}
 }
+
+
 
 /**
  * @param AB : Array[2]<Vector> - первый отрезок
@@ -243,7 +238,7 @@ module.exports = {
 	intersectLinePart,
 	intersectMatrix,
 	sorterByDirection,
-	//expandEnds,
+	distanceOfLinePart,
 	isCollinear,
 	wasLongest
 };

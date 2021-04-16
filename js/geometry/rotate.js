@@ -123,8 +123,9 @@ function rotateSkew(parts, m){
 	
 	top = rotateLine(top, m, b, b1);
 	bottom = rotateLine(bottom, m, d, d1, rev);
-	
-	if(parts[0].z === top[0].z){
+	console.log(parts[0]);
+	console.log(parts[0][0].z, top[0].z);
+	if(parts[0][0].z === top[0].z){
 		return [top, bottom];
 	}
 	else{

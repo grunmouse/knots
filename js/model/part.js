@@ -9,6 +9,8 @@ const {Vector, Vector2, Vector3} = require('@grunmouse/math-vector');
 
 const extendVector = require('./extend-vector.js');
 
+const LineEdge = require('./edge.js');
+
 const {isosceles, deltoid, isCollinear} = require('../geometry/polyline.js');
 
 class ComponentPart extends Array {
@@ -74,7 +76,6 @@ class ComponentPart extends Array {
 		}
 	}
 	
-
 	concat(...items){
 		let result = super.concat(...items);
 		result.started = this.started;
@@ -89,13 +90,14 @@ class ComponentPart extends Array {
 		}
 	}
 	
+	
 	edges(){
 		let result = [], len = this.length;
 		for(let i=1; i<len; ++i){
-			result.push([this[i-1], this[i]]);
+			result.push(new LineEdge(this[i-1], this[i], i, this));
 		}
 		if(this.closed){
-			result.push([this[len-1], this[0]]);
+			result.push(new LineEdge(this[len-1], this[0], 0 , this));
 		}
 		return result;
 	}
@@ -193,6 +195,9 @@ class ComponentPart extends Array {
 			return this;
 		}
 		let A = this[0], B = this[1], D = this[this.length-1], C = this[this.length-2];
+		if(!B){
+			console.log(this);
+		}
 		let BA = A.sub(B);
 		let CD = D.sub(C);
 		
@@ -256,5 +261,14 @@ class ComponentPart extends Array {
 		
 	}
 }
+
+[
+	"cut",
+	"extend"
+].forEach(method=>{
+	ComponentPart.prototype[method] = function(...args){
+		return this.map(vector=>(extendVector(vector[method](...args), vector)));
+	}
+});
 
 module.exports = ComponentPart;

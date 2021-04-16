@@ -32,8 +32,7 @@ function joinParamInto(into, name, a, b, callback){
 	else{
 		result = callback(a, b);
 	}
-	
-	into[name] = result;
+	extendVector(into, name, result);
 }
 
 function joinExtVectors(a, b){
