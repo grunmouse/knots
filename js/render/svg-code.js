@@ -19,7 +19,7 @@ function svg(body, area){
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="${size.x}mm"
    height="${size.y}mm"
-   viewBox="${A.x} ${A.y} ${size.x} ${size.y}"
+   viewBox="${A.x} ${-B.y} ${size.x} ${size.y}"
    version="1.1"
    >
 

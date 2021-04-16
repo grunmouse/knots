@@ -11,7 +11,6 @@ const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 
 function lineto(v){
-	//console.log(v);
 	return `L ${v.x} ${v.y}`;
 }
 
@@ -21,7 +20,7 @@ function lineto(v){
 function arct(A, B, C, r){
 
 	let [M, D, N] = isoradial(A, B, C, r); //Отсекаем отрезки нужной длины
-	//let O = deltoid(M, D, N); //Находим центр дуги
+
 	let result = [];
 	if(A.ne(M)){
 		result.push(lineto(M));
@@ -103,4 +102,4 @@ function svgPart(part, width, strokeColor){
 <path d="${form.stroke}" fill="none" stroke="${strokeColor}" style="stroke-width:0.25" />`;
 }
 
-module.exports = {svgBold, svgPart};
+module.exports = {svgBold, svgPart, svgPolyline};
