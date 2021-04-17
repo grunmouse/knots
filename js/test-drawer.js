@@ -51,7 +51,7 @@ async function main(){
 	
 	knot.addSkewPoints();
 	
-	
+	knot = knot.round(0);
 	knot.setColors(colors);
 	//console.log(knot);
 	

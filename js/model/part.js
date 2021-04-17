@@ -260,6 +260,7 @@ class ComponentPart extends Array {
 		return result;
 		
 	}
+	
 }
 
 [

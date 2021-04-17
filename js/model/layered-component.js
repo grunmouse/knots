@@ -24,6 +24,7 @@ class LayeredComponent extends Part {
 	}
 	
 	isXY(index){
+		let [A, B] = this.subarr(index, 2);
 		return !!A && !!B && A.z === B.z;
 	}
 	

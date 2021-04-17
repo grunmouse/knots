@@ -2,6 +2,8 @@ const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 const {MapOfSet} = require('@grunmouse/special-map');
 
+const binary = require('@grunmouse/binary');
+
 const {
 	intersectMatrix,
 	intersectLinePart,
@@ -15,6 +17,7 @@ const {
 	convertToKeys,
 	convertToVectors
 } = require('./vector-map.js');
+const extendVector = require('./extend-vector.js');
 
 const LayeredComponent = require('./layered-component.js');
 
@@ -39,6 +42,11 @@ class LevelsDiagram{
 		this.components = Array.from(components, (cmp)=>(LayeredComponent.from(cmp)));
 	}
 	
+	mapmap(callback){
+		const fun = (v, i, arr)=>(extendVector(callback(v, i, arr), v));
+		return new LevelsDiagram(this.components.map((cmp)=>(cmp.map(fun))));
+	}
+	
 	points(){
 		return this.components.flat();
 	}
@@ -54,6 +62,31 @@ class LevelsDiagram{
 	
 	hasEdge(A, B){
 		return this.components.some(cmp=>cmp.hasEdge(A, B));
+	}
+	
+	round(s){
+		return this.mapmap((V)=>V.map((x)=>binary.float64.round(x, s)));
+	}
+	
+	/**
+	 * Создаёт диаграмму, точки которой выровнены относительно сетки с шагом 1 по всем осям
+	 */
+	toRegularScale(){
+		let coord = [new Set(), new Set(), new Set()];
+		this.points().forEach((A)=>{
+			coord.forEach((xx, i)=>{xx.add(A[i])});
+		});
+		let map = coord.map((xx)=>{
+			xx = [...xx].sort((a,b)=>(a-b));
+			return new Map(xx.map((x, i)=>([x, i])));
+		});
+		
+		const fun = (P)=>{
+			let xx = P.map((x, i)=>(map[i].get(x)));
+			return new P.constructor(...xx);
+		};
+		
+		return this.mapmap(fun);
 	}
 	
 	/**
@@ -212,6 +245,24 @@ class LevelsDiagram{
 		for(let rep of toReplace){
 			let {component, index, newseg} = rep;
 			component.esplice(index-1, 3, ...newseg);
+		}
+		return this;
+	}
+	
+	approxRectangleLines(){
+		for(let cmp of this.components){
+			let i = cmp.length;
+			for(;i--;){
+				let edge = cmp.subarr(i-1, 2);
+				let [A, B] = edge;
+				if(A && B && A.z === B.z && A.x !== B.x && A.y !== B.y){
+					//Если ребро существует и расположено в плоскости диагонально
+					let C = new Vector3(A.x, B.y, A.z);
+					let D = new Vector3(B.x, A.y, A.z);
+					
+					
+				}
+			}			
 		}
 	}
 	
