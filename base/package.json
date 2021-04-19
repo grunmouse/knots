@@ -1,14 +1,16 @@
 {
-  "name": "knots-base",
+  "name": "base",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "@grunmouse/simple-table": "link:..\\..\\simple-table",
+    "@grunmouse/sqlite": "link:..\\..\\sqlite",
+    "yaml": "^1.10.2"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@grunmouse/simple-table": "link:..\\..\\simple-table"
-  }
+  "license": "ISC"
 }

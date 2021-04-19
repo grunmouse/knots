@@ -1,0 +1,105 @@
+---
+doctype: schemes
+data:
+- scheme: s-1
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Простой узел
+  - params: {a: 1+}
+    knot: Кровавый узел
+- scheme: s-2
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Простой узел
+  - params: {a: 1+}
+    knot: Кровавый узел
+- scheme: s-3 #кратные простые узлы
+  type: drawer
+  spec:
+   a: posit
+   b: posit
+  product:
+  - params: {a: 1, b: 1}
+    knot: Простой узел
+  - params: {a: 2+, b: 1}
+    knot: Кровавый узел
+  - params: {a: 1, b: 2+}
+    knot: Кровавый узел
+  - params: {a: 2, b: 2}
+    knot: Удвоенный простой узел
+- scheme: s-4
+  type: drawer
+  spec:
+   a: posit
+  product:
+  - params: {a: 1}
+    knot: Простой узел
+  - params: {a: 2}
+    knot: Восьмёрка
+  - params: {a: 3}
+    knot: Девятка
+  - params: {a: 4+}
+    knot: Стивидорный узел
+- scheme: s-5
+  type: drawer
+  spec:
+   a: posit
+   b: nat
+  product:
+  - params: {a: 1, b: 0}
+    knot: Простой узел
+  - params: {a: 1, b: 1+}
+    knot: Кровавый узел
+  - params: {a: 2, b: 0}
+    knot: Восьмёрка
+  - params: {a: 2, b: 1+}
+    knot: Удавка извосьмёрки
+  - params: {a: 3, b: 0}
+    knot: Девятка
+  - params: {a: 4, b: 1}
+    knot: Симметричный стивидорный узел
+- scheme: s-6
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Простой узел
+  - params: {a: 1+}
+    knot: Францисканский узел
+- scheme: s-7
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Простой узел	
+  - params: {a: 1+}
+    knot: Удавка из простого узла
+- scheme: s-8
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Восьмёрка	
+  - params: {a: 1+}
+    knot: Удавка из восьмёрки
+- scheme: s-9
+  type: drawer
+  spec:
+   a: int(2+)
+  product:
+  - params: {a: 2}
+    knot: Простой узел
+  - params: {a: 3}
+    knot: Трёхпетельный узел
+  - params: {a: 4}
+    knot: Четырёхпетельный узел
+...

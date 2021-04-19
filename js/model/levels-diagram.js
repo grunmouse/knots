@@ -249,6 +249,24 @@ class LevelsDiagram{
 		return this;
 	}
 	
+	/**
+	 * Проверяет можно ли замерить ребро AB на ломаную ACB, не создав новых пересечений
+	 */
+	allowAddingTriangle([A,B], C){
+		let crossAC = this.edges().some((edge)=>{
+			let R = intersectLinePart([A,C], edge);
+			return R && R.ne(A);
+		});
+		let crossCB = this.edges().some((edge)=>{
+			let R = intersectLinePart([C,B], edge);
+			return R && R.ne(B);
+		});
+		return !crossAC && !crossCB;
+	}
+	
+	/**
+	 * Заменяет диагональные линии ломаными
+	 */
 	approxRectangleLines(){
 		for(let cmp of this.components){
 			let i = cmp.length;
@@ -260,7 +278,18 @@ class LevelsDiagram{
 					let C = new Vector3(A.x, B.y, A.z);
 					let D = new Vector3(B.x, A.y, A.z);
 					
-					
+					if(this.allowAddingTriangle(edge, C)){
+						cmp.splice(i, 0, C);
+						continue;
+					}
+					else if(allowAddingTriangle(edge, D)){
+						cmp.splice(i, 0, D);
+						continue;
+					}
+					else{
+						cmp.addMiddle(i);
+						++i;
+					}
 				}
 			}			
 		}
