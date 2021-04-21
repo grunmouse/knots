@@ -62,6 +62,8 @@ async function main(){
 		await identical(doc);
 	}
 	
+	//await findGroupByPermutated();
+	
 	/*
 	Находим названия, совпадающие у всех авторов
 	*/
@@ -117,6 +119,23 @@ async function groupIdentical(arr){
 	}
 }
 
+async function findGroupByPermutated(){
+	const knots = await db.all('SELECT rowid, name, source FROM knot_names WHERE rowid = identical;');
+	const exclude = new Set();
+	const by_names = new Map(knots.map((knot)=>([knot.name.toLowerCase(), knot])));
+	
+	for(let knot of knots) if(!exclude.has(knot.rowid)){
+		let {source, name} = knot;
+		let words = name.split(' ');
+		if(words.length > 1){
+			//console.log(words);
+			const q = 'VALUES ' + words.map(a=>('("'+a+'")')).join(',');
+			
+			console.log(await db.all(q));
+		}
+	}
+}
+
 async function handleIdentical(identical){
 	for(let group of identical){
 		await groupIdentical(group);
@@ -126,6 +145,16 @@ async function handleIdentical(identical){
 async function findKnot(index){
 	if(typeof index === 'string'){
 		let a = await db.get(`SELECT identical FROM knot_names WHERE source = "all" AND name = "${index}";`);
+		if(!a){
+			console.log(index);
+		}
+		return a.identical;
+	}
+	else if(index.source){
+		let a = await db.get(`SELECT identical FROM knot_names WHERE source = "${index.source}" AND name = "${index.name}";`);
+		if(!a){
+			console.log(index);
+		}
 		return a.identical;
 	}
 }

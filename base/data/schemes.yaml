@@ -59,7 +59,7 @@ data:
   - params: {a: 2, b: 0}
     knot: Восьмёрка
   - params: {a: 2, b: 1+}
-    knot: Удавка извосьмёрки
+    knot: Удавка из восьмёрки
   - params: {a: 3, b: 0}
     knot: Девятка
   - params: {a: 4, b: 1}
@@ -102,4 +102,24 @@ data:
     knot: Трёхпетельный узел
   - params: {a: 4}
     knot: Четырёхпетельный узел
+- scheme: s-10
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Восьмёрка
+- scheme: s-11
+  type: drawer
+  spec:
+   a: nat
+  product:
+  - params: {a: 0}
+    knot: Простой узел
+  - params: {a: 1+}
+    knot: {source: Куряшкин, name: Многократная восьмёрка}
+- scheme: s-12 #Пересекающийся узел
+  type: drawer
+  spec:
+   a: nat
 ...

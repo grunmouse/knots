@@ -232,12 +232,50 @@ class LayeredComponent extends Part {
 	}
 	
 	/**
+	 * Перемещает начало координат в новую точку O
+	 */
+	translate(O){
+		return this.emap((vec)=>(vec.sub(O)));
+	}
+	
+	/**
 	 * Создаёт новый компонент, отражая текущий по оси z
 	 */
 	mirrorZ(){
 		return this.scale(1,-1);
 	}
 	
+	
+	numberSkews(){
+		let index = 1;
+		for(let i = 0; i<this.length; ++i){
+			let point = this[i];
+			if(point.skew){
+				point.number = index++;
+			}
+		}
+	}
+	
+	notationDowker(){
+		let odd = Map(), even = Map();
+		let index = 1;
+		for(let i = 0; i<this.length; ++i){
+			let point = this[i];
+			if(point.skew){
+				if(index & 1){
+					odd.set(index, point);
+				}
+				else{
+					let number = -index * point.skew; //skew = -1 в случает перехода или 1 в случае прохода
+					even.set(point, number);
+				}
+				++index;
+			}
+		}
+		let pair = [...odd].map(([index, A])=>([index, even.get(A.skewlink)]));
+		pair.sort((a, b)=>(a[0] - b[0]));
+		return pair.map(a=>(a[1]));
+	}
 	
 	renderToSCAD(){
 		let body = 

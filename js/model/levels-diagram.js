@@ -8,7 +8,8 @@ const {
 	intersectMatrix,
 	intersectLinePart,
 	sorterByDirection,
-	distanceOfLinePart
+	distanceOfLinePart,
+	isosceles
 } = require('../geometry/polyline.js');
 
 
@@ -191,6 +192,14 @@ class LevelsDiagram{
 		return new LevelsDiagram(opened.concat(closed));
 	}	
 	
+	closeAll(){
+		return new LevelsDiagram(this.components.map(cmp=>{
+			let res = cmp.clone();
+			res.closed = true;
+			return res;
+		});
+	}
+	
 	/**
 	 * Рассчитывает наименьшее расстояние в плане, на которое к точке M приближаются не содержащие её отрезки
 	 */
@@ -214,9 +223,9 @@ class LevelsDiagram{
 	}
 	
 	/**
-	 * Поворачивает все скрещивания в вертикальное положение
+	 * Находит все пары точек скрещивания
 	 */
-	rotateSkews(){
+	skewPairs(){
 		const skewPoint = new Map();
 		const skewPair = [];
 		for(let cmp of this.components){
@@ -234,6 +243,15 @@ class LevelsDiagram{
 				}
 			}
 		}
+		
+		return skewPair;
+	}
+	
+	/**
+	 * Поворачивает все скрещивания в вертикальное положение
+	 */
+	rotateSkews(){
+		const skewPair = this.skewPairs();
 		for(let segments of skewPair){
 			let cross = segments.map((seg)=>(seg.component.subarr(seg.index - 1, 3)));
 			let m = this.minDistance(cross[0][1])*Math.SQRT1_2;
@@ -282,7 +300,7 @@ class LevelsDiagram{
 						cmp.splice(i, 0, C);
 						continue;
 					}
-					else if(allowAddingTriangle(edge, D)){
+					else if(this.allowAddingTriangle(edge, D)){
 						cmp.splice(i, 0, D);
 						continue;
 					}
@@ -320,6 +338,133 @@ class LevelsDiagram{
 			}
 		});
 	}
+	
+	findPoint(A){
+		for(let cmp of this.components){
+			let index = cmp.findPoint(A);
+			if(index>-1){
+				return [cmp, index];
+			}
+		}
+	}
+	
+	pointRange(A){
+		for(let cmp of this.components){
+			let range = cmp.pointRange(A);
+			if(range){
+				return range;
+			}
+		}
+	}
+	
+	/**
+	 * Знак крутки перекрёстка 
+	 */
+	spinSkew(M){
+		let N = M.skewlink;
+		let [M, B] = this.pointRange(M, 1);
+		let [N, D] = this.pointRange(N 1);
+		
+		return this._spin([M, B], [N, D]);
+	}
+	
+	_spin([M, B], [N, D]){
+		let MB = B.sub(M);
+		let ND = D.sub(N);
+		let NM = M.sub(N);
+		let m = ND.dot(NM.cross(MB));
+		
+		return Math.sign(m);
+	}
+	
+	/**
+	 * создаёт и возвращает компоненты, разрешающие скрещивание
+	 * @param type = 1 - разделение A, 
+	 *              -1 - B
+	 */
+	_seifert([A, M, B], [C, N, D], type){
+		let m = this._spin([M, B], [N, D]);
+		if(m<0 && type<0 || m>0 && type>0){
+			return [[A, A.cut(2).extend(C.z), C], [B, B.cut(2).extend(D.z), D]];
+		}
+		else if(m<0 && type>0 || m>0 && type<0){
+			return [[A, A.cut(2),extend(D.z), D], [C, C.cut(2).extend(B.z), B]];
+		}
+	}
+	
+	/**
+	 * Создаёт новую диаграмму, разбив все перекрёстки и получив циклы сейферта
+	 * @param skews - Array<[pair, type]> - пары скрещивающихся точек с решением на разбиение
+	 */
+	makeSeifertCycles(skews){
+		const restrict = [];
+		const adding = [];
+		for(let [pair, type] of skews){
+			let b = pair[0].component, ib = pair[0].index;
+			let d = pair[1].component, id = pair[1].index;
+			
+			let [A, M, B] = b.subarr(ib-1, 3);
+			let [C, N, D] = d.subarr(id-1, 3);
+			
+			let dist = this.minDistance(M);
+			
+			let AMB = isosceles(A, M, B, dist);
+			let CND = isosceles(C, N, D, dist);
+			
+			restrict.push({component:b, index:ib, points:AMB);
+			restrict.push({component:d, index:id, points:CND);
+			
+			adding.push(...this._seifert(AMB, CND, type));
+		}
+		
+		restrict.sort((a, b)=>(b.index - a.index));
+		
+		for(let cmp of this.components){
+			let rs = restrict.filter(({component})=>(component === cmp));
+			let arr = [...cmp];
+			
+			for(let rule of rs){
+				let {index, [A, M, B]} = rule;
+				let tail = [B, ...arr.slice(index+1)];
+				arr.splice(index, arr.length, A);
+				adding.push(tail);
+			}
+			adding.push(arr);
+		}
+		
+		let result = new LevelsDiagram(adding);
+		
+		result = result.assemblyConnectedComponents();
+		
+		return result;
+	}
+	
+	polynomeKaufman(){
+		let pairs = this.skewPairs();
+		let size = 2n ** BigInt(pairs.lenght);
+		let items = [];
+		if(size === 1){
+			items.push(1);
+		}
+		else{
+			for(let code = 0n; code<size; ++code){
+				let skews = pairs.map((pair, i)=>{
+					let type = (code & BigInt(i)) ? -1 : 1;
+					return [pair, type];
+				});
+				let countA = skews.reduce((akk, [pair, type])=>(akk + +(type === 1)), 0);
+				let countB = skews.reduce((akk, [pair, type])=>(akk + +(type === -1)), 0);
+				
+				let cycles = this.makeSeifertCycles(skews);
+				let countC = cycles.components.length - 1;
+				
+				items.push({a:countA, b:countB, c:countC});
+			}
+		}
+		
+		//TODO Здесь надо сложить элементы
+	}
+	
 
 	render2d(partRender){
 		let parts = this.components.map(cmp=>cmp.splitByLevels()).flat();
@@ -363,6 +508,7 @@ class LevelsDiagram{
 [
 	'mirrorZ',
 	'scale',
+	'translate',
 	'clone'
 ].forEach((method)=>{
 	LevelsDiagram.prototype[method] = function(...args){
@@ -370,6 +516,18 @@ class LevelsDiagram{
 	}
 });
 
+[
+	'notationDowker'
+].forEach((method)=>{
+	LevelsDiagram.prototype[method] = function(...args){
+		if(this.components.length === 1){
+			return this.components[0][method](...args);
+		}
+		else{
+			throw new Error(`Метод ${method} не может быть применён к зацеплению!`);
+		}
+	}
+});
 
 
 module.exports = LevelsDiagram;

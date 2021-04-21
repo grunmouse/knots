@@ -76,6 +76,10 @@ class ComponentPart extends Array {
 		}
 	}
 	
+	emap(callback){
+		return this.map((v, i, arr)=>(extendVector(callback(v, i, arr), v)));
+	}
+	
 	concat(...items){
 		let result = super.concat(...items);
 		result.started = this.started;
@@ -104,6 +108,20 @@ class ComponentPart extends Array {
 	
 	findPoint(A){
 		return this.findIndex((P)=>(P.eq(A)));
+	}
+	
+	/**
+	 * Окрестность точки
+	 * @param A - точка
+	 * @param prev - смещение начала выборки
+	 * @param post - смещение конца выборки
+	 */
+	pointRange(A, prev, post){
+		let i = this.findPoint(A);
+		if(i>-1){
+			let len = post - prev + 1;
+			return this.subarr(i+prev, len);
+		}
 	}
 	
 	findEdge(A, B){
