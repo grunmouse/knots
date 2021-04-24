@@ -197,7 +197,7 @@ class LevelsDiagram{
 			let res = cmp.clone();
 			res.closed = true;
 			return res;
-		});
+		}));
 	}
 	
 	/**
@@ -362,8 +362,8 @@ class LevelsDiagram{
 	 */
 	spinSkew(M){
 		let N = M.skewlink;
-		let [M, B] = this.pointRange(M, 1);
-		let [N, D] = this.pointRange(N 1);
+		let [_, B] = this.pointRange(M, 1);
+		let [__, D] = this.pointRange(N, 1);
 		
 		return this._spin([M, B], [N, D]);
 	}
@@ -411,8 +411,8 @@ class LevelsDiagram{
 			let AMB = isosceles(A, M, B, dist);
 			let CND = isosceles(C, N, D, dist);
 			
-			restrict.push({component:b, index:ib, points:AMB);
-			restrict.push({component:d, index:id, points:CND);
+			restrict.push({component:b, index:ib, points:AMB});
+			restrict.push({component:d, index:id, points:CND});
 			
 			adding.push(...this._seifert(AMB, CND, type));
 		}
@@ -424,7 +424,7 @@ class LevelsDiagram{
 			let arr = [...cmp];
 			
 			for(let rule of rs){
-				let {index, [A, M, B]} = rule;
+				let {index, points:[A, M, B]} = rule;
 				let tail = [B, ...arr.slice(index+1)];
 				arr.splice(index, arr.length, A);
 				adding.push(tail);

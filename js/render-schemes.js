@@ -25,7 +25,7 @@ const colors = [
 
 function drawScheme(filename){
 	return function(params){
-		let code = fs.readFileSync('./js/knots/'+filename, {encoding:'utf8'});
+		let code = fs.readFileSync(Path.join(module.path, 'knots', filename), {encoding:'utf8'});
 		let env = Drawer.draw(code, params);
 
 		let knot = new LevelsDiagram(env.components);
@@ -38,7 +38,9 @@ function paramToName(params){
 }
 
 async function handleFile(texfilepath){
+	texfilepath = Path.join(module.path, '..', texfilepath)
 	let dir = Path.dirname(texfilepath);
+	
 	let code = await fsp.readFile(texfilepath, {encoding:'utf8'});
 	
 	let comment = code.match(/scheme:\s*(.*)((?:[\r\n]+view:.+)+)/i);

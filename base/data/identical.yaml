@@ -3,5 +3,6 @@
 doctype: identical
 mode: all
 source: [Скрягин, Куряшкин]
-exclude: []
+exclude: 
+- Акулий
 ...
