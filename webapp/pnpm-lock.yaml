@@ -1,0 +1,17 @@
+lockfileVersion: 5.3
+
+specifiers:
+  '@grunmouse/knots-helper': link:..\js
+  '@grunmouse/varname-notation': link:..\..\varname-notation
+  vue: ^2.6.12
+
+dependencies:
+  '@grunmouse/knots-helper': link:../js
+  '@grunmouse/varname-notation': link:../../varname-notation
+  vue: 2.6.12
+
+packages:
+
+  /vue/2.6.12:
+    resolution: {integrity: sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==}
+    dev: false
