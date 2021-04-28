@@ -98,8 +98,10 @@ function svgPart(part, width, strokeColor){
 	let fillColor = part.color || '#FFFFFF';
 	strokeColor = strokeColor || '#000000';
 	
-	return `<path d="${form.fill}" fill="${fillColor}" stroke="none" />
-<path d="${form.stroke}" fill="none" stroke="${strokeColor}" style="stroke-width:0.25" />`;
+	let level = 'level'+part.z;
+	
+	return `<path d="${form.fill}" fill="${fillColor}" stroke="none" class="${level}-fill"/>
+<path d="${form.stroke}" fill="none" stroke="${strokeColor}" style="stroke-width:0.25" class="${level}-stroke"/>`;
 }
 
 module.exports = {svgBold, svgPart, svgPolyline};

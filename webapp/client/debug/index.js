@@ -21,6 +21,7 @@ const colors = [
 
 const template = `<div id="vue">
 <div class="editor">
+<div style="display:flex"><button @click="load();">Загрузить</button><button :disabled="saved" @click="save();">Сохранить</button></div>
 <div style="display:flex"><button @click="render();">Строить</button><textarea v-model="param"></textarea></div>
 <div><textarea v-model="code" style="width:30em; height: 40em"></textarea></div>
 </div>
@@ -46,7 +47,8 @@ const vm = new Vue({
 		viewBox:"0 0 300 200",
 		svg:"",
 		code:"draw o 2 u no",
-		param:`{"a":1, "b":1}`
+		param:`{"a":1, "b":1}`,
+		saved: true
 	},
 	computed:{
 
@@ -67,6 +69,7 @@ const vm = new Vue({
 			knot = knot.assemblyConnectedComponents();			
 			knot.addSkewPoints();
 			knot.moveAllZoutAngle();
+			knot.moveZoutEnds();
 
 			knot = knot.scale(10, 10);
 			
@@ -87,9 +90,27 @@ const vm = new Vue({
 			this.viewBox=`${A.x} ${-B.y} ${size.x} ${size.y}`;
 			
 			console.log('render');
+		},
+		
+		load: function(){
+			ajaj('../../rest/file/s.txt').then((code)=>{
+				this.code = code;
+				this.saved = true;
+			});
+		},
+		
+		save: function(){
+			ajaj('../../rest/file/s.txt',{
+				body:this.code,
+				method:'PUT'
+			}).then((status)=>{
+				this.saved = true;
+			});
 		}
 	},
 	watch:{
-
+		code:function(){
+			this.saved = false;
+		}
 	}
 });

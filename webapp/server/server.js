@@ -5,7 +5,8 @@ const http = require('http');
 const mapping = {
 	common : require('./common.js'),
 	client :  require('./client.js'),
-	vue :  require('./vue.js')
+	vue :  require('./vue.js'),
+	rest :  require('./rest.js')
 };
 
 
