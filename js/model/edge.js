@@ -1,7 +1,6 @@
 const inspect = Symbol.for('nodejs.util.inspect.custom');
 
 const extendVector = require('./extend-vector.js');
-const util = require('util');
 
 class LineEdge{
 	/**
@@ -18,8 +17,8 @@ class LineEdge{
 	[inspect](depth, options){
 		//console.log(options);
 		let name = this.constructor.name;
-		let A = util.inspect(this.A);
-		let B = util.inspect(this.B);
+		let A = this.A;
+		let B = this.B;
 		
 		return `${name} [${A}, ${B}]`;
 		

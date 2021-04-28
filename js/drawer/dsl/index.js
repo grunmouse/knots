@@ -1,7 +1,6 @@
 
 const makeLexer = require('./lexer.js');
 const EnvironmentBase = require('./evaluate.js');
-const {inspect} = require('util');
 let trans = require('./translator.js');
 
 function DrawerBase(lib){

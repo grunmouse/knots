@@ -3,7 +3,7 @@
 
 function createEval(mapping){
 
-	function eval(item, strong){
+	function myeval(item, strong){
 		if(!item){
 			throw new Error('Item is undefined');
 		}
@@ -32,7 +32,7 @@ function createEval(mapping){
 		return result;
 	}
 	
-	return eval;
+	return myeval;
 }
 
 module.exports = createEval;

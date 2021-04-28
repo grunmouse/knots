@@ -17,7 +17,7 @@ const dirmap = (function(){
 	let lon = ['w', 'o', 'e'];
 	let full = lat.concat(lon);
 	let half = [];
-	for(y of lat) for(x of lon){
+	for(let y of lat) for(let x of lon){
 		let key = y+x;
 		map[key] = map[x].add(map[y]);
 		half.push(key);
