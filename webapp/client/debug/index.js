@@ -87,9 +87,6 @@ const vm = new Vue({
 			
 			this.width=`${size.x}mm`;
 			this.height=`${size.y}mm`;
-			this.viewBox=`${A.x} ${-B.y} ${size.x} ${size.y}`;
-			
-			console.log('render');
 		},
 		
 		load: function(){
