@@ -10,6 +10,10 @@ const {roundedBoldstroke, maxRoundRadius} = require('../geometry/rounded.js');
 const {Vector3, Vector2} = require('@grunmouse/math-vector');
 
 
+function moveto(v){
+	return `M ${v.x} ${v.y}`;
+}
+
 function lineto(v){
 	return `L ${v.x} ${v.y}`;
 }
@@ -26,10 +30,31 @@ function arct(A, B, C, r){
 		result.push(lineto(M));
 	}
 	let signA = B.sub(A).cross(C.sub(B));
-	let sweep = signA < 0 ? 1 : 0;
+	let sweep = signA < 0 ? 0 : 1;
+
 	result.push(`A ${r} ${r} 0 0 ${sweep} ${N.x} ${N.y}`);
 	
 	return result.join(' ');
+}
+
+function svgElement(el){
+	const {type, start, fin} = el;
+	let code = [];
+	code.push(moveto(start));
+	if(type === 'line'){
+		code.push(lineto(fin));
+	}
+	else if(type === 'curve'){
+		let [P0, P1, P2, P3] = el.points;
+		code.push(`C ${P1.x} ${P1.y}, ${P2.x} ${P2.y}, ${P3.x} ${P3.y}`);
+	}
+	else if(type === 'arc'){
+		let r = el.radius;
+		let sweep = el.sign < 0 ? 0 : 1;
+		//console.log(el.sign);
+		code.push(`A ${r} ${r} 0 0 ${sweep} ${fin.x} ${fin.y}`);
+	}
+	return code.join(' ');
 }
 
 function svgPolyline(points, close){
@@ -104,4 +129,9 @@ function svgPart(part, width, strokeColor){
 <path d="${form.stroke}" fill="none" stroke="${strokeColor}" style="stroke-width:0.25" class="${level}-stroke"/>`;
 }
 
-module.exports = {svgBold, svgPart, svgPolyline};
+module.exports = {
+	svgBold, 
+	svgPart, 
+	svgPolyline,
+	svgElement
+};

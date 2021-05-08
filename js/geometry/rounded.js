@@ -14,12 +14,12 @@ function roundedBoldstroke(points, s){
 			let AB = B.sub(A);
 			let BC = C.sub(B);
 			let rot = AB.cross(BC);
-			if(rot<0){
+			if(rot>0){
 				//левый поворот
 				L[i].radius = B.radius - s;
 				R[i].radius = B.radius + s;
 			}
-			else if(rot>0){
+			else if(rot<0){
 				//правый поворот
 				L[i].radius = B.radius + s;
 				R[i].radius = B.radius - s;

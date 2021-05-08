@@ -7,9 +7,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="50mm"
-   height="50mm"
-   viewBox="-25 -25 50 50"
+   width="70mm"
+   height="30mm"
+   viewBox="-5 -25 70 30"
    version="1.1"
    >
 
@@ -19,14 +19,20 @@
     </marker>
 </defs>
 <g transform="scale(1, -1)">
-
-<path stroke="black" fill="none" style="stroke-width:0.25" d="M 0 -25 L 0 25" /> 
-<path stroke="black" fill="none" style="stroke-width:0.25" d="M -25 0 L 25 0" /> 
-<path stroke="black" fill="none" style="stroke-width:0.25" d="M -20 -20 L -20 20 L 20 20 L 20 -20 Z" /> 
-
-<g transform="translate(-15, -15)" >
-<path stroke="blue" fill="none" d="M 10,20 L 10 20 L 12.5 20 L 12.5 15 L 15 15 L 17.5 14.999999999999998 L 17.5 10 L 20 10 L 20 10" style="stroke-width:2" />
-<path stroke="red" fill="none" d="M 10,10 L 10 10.000000000000002 L 10 12.5 L 14.999999999999998 12.5 L 15 15 L 15 17.5 L 20 17.5 L 20 20 L 20 20"  style="stroke-width:2" />
-</g>
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 0 0 L 16.464466094067266 16.464466094067262" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 16.464466094067262 16.464466094067262 A 5.000000000000002 5.000000000000002 0 0 0 23.535533905932738 16.464466094067262" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 23.535533905932738 16.464466094067262 L 40 -3.552713678800501e-15" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M -1.414213562373095 1.4142135623730951 L 15.05025253169417 17.878679656440358" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 15.050252531694168 17.878679656440355 A 6.999999999999999 6.999999999999999 0 0 0 24.94974746830583 17.878679656440358" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 24.949747468305834 17.878679656440358 L 41.4142135623731 1.4142135623730923" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 1.414213562373095 -1.4142135623730951 L 17.87867965644036 15.050252531694166" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 17.878679656440358 15.050252531694166 A 3.0000000000000004 3.0000000000000004 0 0 0 22.121320343559642 15.050252531694166" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 22.121320343559642 15.050252531694166 L 38.58578643762691 -1.4142135623730994" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 1.414213562373095 -1.4142135623730951 L 16.232233047033635 16.696699141100893" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 16.23223304703363 16.696699141100893 C 17.968353337402455 18.950466894011914, 21.855604480300542 19.440501020448895, 24.32312732023616 17.252059508370692" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 24.32312732023616 17.252059508370692 L 31.215948949002517 11.612478175743675" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 8.485281374238571 5.65685424949238 L 5.656854249492381 8.48528137423857" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 20.471282482690288 15.891683075655996 L 21.099659126277338 19.842017592351294" />
+<path stroke="black" fill="none" style="stroke-width:0.25" d="M 35.4585896361218 1.7129832391320114 L 38.28701676086799 4.541410363878203" />
 </g>
 </svg>

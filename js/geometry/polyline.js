@@ -32,7 +32,7 @@ function accum(start, arr){
 function deltoid(B, A, D){
 	let AD = D.sub(A);
 	let ort = B.sub(A).add(AD).ort();
-	let AC = ort.mul(AD.dot(ort));
+	let AC = ort.mul(AD.abs()/Vector.cosDiff(AD, ort));
 	
 	return A.add(AC);
 }
@@ -176,6 +176,21 @@ function intersectLinePart(AB, CD){
 	}
 }
 
+/**
+ * Находит точку пересечения отрезка AB и прямойCD
+ */
+function intersectPartAndLine(AB, CD){
+	const R = intersectLine(AB, CD);
+	if(R){
+		if(isInPart(R, AB)){
+			return R;
+		}
+		//console.log(AB, CD, R);
+	}
+}
+
+
+
 
 function intersectMatrix(parts){
 	const result = parts.map( 
@@ -236,6 +251,7 @@ module.exports = {
 	boldstroke,
 	isInPart,
 	intersectLinePart,
+	intersectPartAndLine,
 	intersectMatrix,
 	sorterByDirection,
 	distanceOfLinePart,
