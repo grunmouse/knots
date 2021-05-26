@@ -199,6 +199,9 @@ function intersectMatrix(parts){
 	return result;
 }
 
+/**
+ * Расстояние точки от отрезка
+ */
 function distanceOfLinePart(P, [A, B]){
 	let AB = B.sub(A);
 	let AP = P.sub(A);

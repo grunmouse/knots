@@ -122,6 +122,9 @@ function findMinCicles(edges){
 	return cycles.map(cycle=>cycle.map(a=>(a.edge[0])));
 }
 
+/**
+ * Возвращает сумму поворотов вдоль пути
+ */
 function pathAngle(path){
 	let val = 0;
 	for(let i=2; i<path.length; ++i){

@@ -37,31 +37,51 @@ function arct(A, B, C, r){
 	return result.join(' ');
 }
 
-function svgElement(el){
-	const {type, start, fin} = el;
-	let code = [];
-	code.push(moveto(start));
+function renderElement(el){
+	let {type, fin} = el.fin;
 	if(type === 'line'){
-		code.push(lineto(fin));
+		return lineto(fin);
 	}
 	else if(type === 'curve'){
 		let [P0, P1, P2, P3] = el.points;
-		code.push(`C ${P1.x} ${P1.y}, ${P2.x} ${P2.y}, ${P3.x} ${P3.y}`);
+		return `C ${P1.x} ${P1.y}, ${P2.x} ${P2.y}, ${fin.x} ${fin.y}`;
 	}
 	else if(type === 'arc'){
 		let r = el.radius;
 		let sweep = el.sign < 0 ? 0 : 1;
-		//console.log(el.sign);
-		code.push(`A ${r} ${r} 0 0 ${sweep} ${fin.x} ${fin.y}`);
+		return `A ${r} ${r} 0 0 ${sweep} ${fin.x} ${fin.y}`;
 	}
-	return code.join(' ');
+	else if(type === 'move'){
+		return moveto(fin);
+	}
+}
+
+function svgElement(el){
+	return moveto(el.start) + ' ' + renderElement(el);
+}
+
+function svgElements(els, close){
+	let code = moveto(els[0].start) + ' ' + els.map(renderElement).join(' ');
+	if(close){
+		code += ' Z';
+	}
+	return code;
+}
+
+/**
+ * Отрисовывает тег из универсального представления
+ */
+function svgUPath(els, close, stroke, fill){
+	const d = svgElements(els, close);
+	
+	return `<path d="${d}" fill="${fill}" stroke="${stroke}" />`;
 }
 
 function svgPolyline(points, close){
 	let start = points[0];
 	let steps = points.slice(1);
 
-	let code = 'M ' + start.cut(2).join(",") + ' '
+	let code = moveto(start) + ' '
 		+ steps.map((v, i)=>{
 			if(v.radius){
 				let prev = points[i];
@@ -133,5 +153,7 @@ module.exports = {
 	svgBold, 
 	svgPart, 
 	svgPolyline,
-	svgElement
+	svgElement,
+	svgElements,
+	svgUPath
 };

@@ -161,7 +161,7 @@ function convertRounded(points){
 	}
 	
 	function addArc(fin, center, radius, apex){
-		let seg = ArcSegment({start:prev, fin, center, radius, x0, apex});
+		let seg = ArcSegment({start:prev, fin, center, radius, x0, apex, arct:true});
 		result.push(seg);
 		x0 = seg.x1;
 		prev = fin;
@@ -329,7 +329,7 @@ function convertLineFromSeg(AB, seg){
 		}
 		else if(A.y == B.y){
 			let radius = start.sub(seg.center).abs();
-			return {type:'arc', start, fin, radius, center:seg.center, sign:seg.sign};
+			return {type:'arc', start, fin, radius, center:seg.center, sign:seg.sign, arct:seg.arct};
 		}
 		else{
 			let P2 = B.sub(A).mul(1/3).add(A);
@@ -342,6 +342,65 @@ function convertLineFromSeg(AB, seg){
 	else{
 		return {type:'line', start, fin};
 	}
+}
+
+function findSegmenByPoint(A, segs){
+	let index = segs.findIndex((seg)=>(seg.x0<=A.x && seg.x1 >= A.x));
+	
+	while(true){
+		let seg = segs[index];
+		if(!seg){
+			return -1;
+		}
+		let {P0, P1, dir0, dir1, line0, line1} = seg;
+		
+		if(A.sub(P0).cross(dir0) < 0){
+			--index;
+		}
+		else if(A.sub(P1).cross(dir1) > 0){
+			++index;
+		}
+		else{
+			return index;
+		}
+	}
+}
+
+function convertLineFrom(AB, segs){
+	let [A, B] = AB;
+	
+	let index = findSegmentByPoint(A, segs);
+	
+	let result = [];
+	
+	let cuting = cutLineBySeg(AB, segs[index]);
+	result.push(convertLineFromSeg(cuting.part, segs[index]));
+	
+	let go = 0;
+	if(cuting.ext0){
+		while(cuting.ext0){
+			--index;
+			cuting = cutLineBySeg(AB, segs[index]);
+			result.push(convertLineFromSeg(cuting.part, segs[index]));
+		}
+	}
+	else if(cuting.ext1){
+		while(cuting.ext1){
+			++index;
+			cuting = cutLineBySeg(AB, segs[index]);
+			result.push(convertLineFromSeg(cuting.part, segs[index]));
+		}
+	}
+	
+	return result;
+}
+
+function convertPolylineFrom(points, segs){
+	let result = [];
+	for(let i=1; i <= points.length; ++i){
+		result.push(convertLineFrom([points[i-1], points[i]], segs));
+	}
+	return result;
 }
 
 module.exports = {
