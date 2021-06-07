@@ -1,20 +1,18 @@
 /*
-инфинити
+Колобок Голдобина
 */
 let x,3
 savepos Start
 draw 
 o 5
-d 2
+u 2
 s 2
 w 4
-u 3
+d 3
 n 4
 o x
-d 2
-s 4.5
-u 3
-s 1.5
+u 2
+s 6
 f
 move
 go Start
@@ -22,14 +20,12 @@ level Start
 go 7, -1
 draw
 w 5
-d 2
+u 2
 n 2
 o 4
-u 3
+d 3
 s 4
 w x
-d 2
-n 4.5
-u 3
-n 1.5
+u 2
+n 6
 f
