@@ -1,4 +1,16 @@
 
-.level0-fill {
-	fill: red;
-}
+
+.level-50-fill  { fill: #287C00; }
+.level-40-fill { fill: #48941C; }
+.level-30-fill { fill: #64B034; }
+.level-20-fill { fill: #7CCC54; }
+.level-10-fill { fill: #9CE46C; }
+.level0-fill { fill: #E8DC58; } /* жёлтый */
+.level10-fill { fill: #E8C440; }
+.level20-fill { fill: #E8B02C; }
+.level30-fill { fill: #DC9414; }
+.level40-fill { fill: #D87408; }
+.level50-fill { fill: #D46508; }
+.level60-fill { fill: #BA5908; }
+.level70-fill { fill: #9B4A08; }
+

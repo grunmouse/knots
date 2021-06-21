@@ -3,4 +3,8 @@
 *.log
 *.aux
 *.synctex.gz
+*.synctex(busy)
+*/svg-inkscape/
+*/svg-inkscape/*
+node_modules/
 node_modules/*
