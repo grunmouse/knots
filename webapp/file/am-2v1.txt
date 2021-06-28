@@ -1,0 +1,28 @@
+/*
+Амфорный стадия 2
+*/
+
+draw
+o 1
+savepos A
+braid 2, a
+braid 2, a
+braid 2, a
+savepos B
+o 1
+n 3
+w 1
+setdir W()
+savepos C
+braid 2,-a 
+braid 2,-a 
+savepos D
+
+w 1
+f
+
+move go A + vec(0, 1, 0)
+draw go D + vec(0, -1, 0)
+
+move go B + vec(0, 1, 0)
+draw go C + vec(0, -1, 0)

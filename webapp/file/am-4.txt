@@ -1,0 +1,50 @@
+/*
+Амфорный стадия 4
+*/
+
+draw
+o 1
+savepos A
+braid 2, a
+braid 2, a
+braid 2, a
+savepos B
+o 4
+n 5
+setdir W()
+w 2
+savepos M
+braid 2,-b 
+w 1
+savepos C
+braid 2,-a 
+braid 2,-a 
+savepos D
+
+w 2
+f
+
+move go A + vec(0, 1, 0)
+draw go D + vec(0, -1, 0)
+
+/* колышка */
+move go M + vec(0, -1, 0)
+draw
+s 3
+w
+n 3
+
+move go B + vec(0, 1, 0)
+draw 
+n
+d b
+o 1.5
+u 2*b
+o 1.5
+n
+w 1.5
+d 2*b
+w 1.5
+u b
+go C + vec(0, -1, 0)
+

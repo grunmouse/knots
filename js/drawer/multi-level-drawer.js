@@ -60,6 +60,7 @@ const lib = {
 		},
 		f(){
 			this.lastComponent.ended = true;
+			this._append = false;
 		},
 		setdir(vec){
 			if(!vec instanceof Vector3){
@@ -107,6 +108,7 @@ const lib = {
 				]);
 			}
 			this.pos = this.pos.add(I);
+			this._append = false;
 		}
 	},
 	fun:{

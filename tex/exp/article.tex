@@ -1,0 +1,25 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage{steal}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{parcolumns}
+\usepackage{array} 
+\usepackage{tabularx}
+\usepackage{comment}
+ \usepackage{svg}
+ \setsvg{inkscape = "E:/Program Files/InkscapePortable/App/Inkscape/bin/inkscape.exe"  -D}
+\steal{../../../tex-configs/}{packages}
+%\steal{../../tex-lib/}{standart}
+
+
+\begin{document}
+\title{Эксперимент над консолью}
+
+\immediate\write18{node ../../js/draw-knot.js ../../schemes/simple-view.txt 1 result.eps}
+
+\includegraphics{result.eps}
+
+12345
+
+\end{document}

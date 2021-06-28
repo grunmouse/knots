@@ -1,0 +1,44 @@
+/*
+Амфорный стадия 3 через косы
+*/
+
+draw
+o 1
+savepos A
+braid 2, a
+braid 2, a
+braid 2, a
+savepos B
+o
+savepos C
+braid 2, 0
+savepos F
+o
+n 5
+setdir W()
+w 1
+savepos M
+braid 2, b 
+w 1
+savepos C
+braid 2, -a 
+braid 2, -a 
+savepos D
+
+w 2
+f
+
+move go B + N()
+draw n 3
+
+move go C + N()
+draw n 3
+
+move go F + N()
+draw n 3
+
+
+
+move go A + vec(0, 1, 0)
+draw go D + vec(0, -1, 0)
+
