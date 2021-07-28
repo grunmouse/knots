@@ -6,62 +6,36 @@
  */
 
 const keys = ['radius', 'starting', 'ending', 'skew'];
+const Mixin = require('./mixin.js');
+
+const falsy = ()=>(false);
+const noop = ()=>();
+const mixinVector = new Mixin(
+[
+	['radius', {value:0, merge:Math.min}],
+	['starting', {value:false, merge:falsy}],
+	['ending', {value:false, merge:falsy}],
+	['skew', {merge:noop}]
+],
+[
+	['cut', function(n){
+		let result = this.constructor.prototype.cut.call(this, n);
+		return this[Mixin.symbol].doMixin(result, this);
+	}],
+	['extend', function(...args){
+		let result = this.constructor.prototype.extend.call(this, ...args);
+		return this[Mixin.symbol].doMixin(result, this);		
+	}]
+]
+);
 
 
-function setprops(result, map){
-	for(let key of keys){
-		setprop(result, key, map[key]);
-	}
-	return result;
-}
-
-function setprop(result, name, value){
-	if(value == null){
-		delete result[name];
-	}
-	else{
-		result[name] = value;
-	}
-	return result;
-}
-
-function setExistProps(result, map){
-	for(let key of keys){
-		if(key in map){
-			setprop(result, key, map[key]);
-		}
-	}	
-}
 
 /**
  * Клонирует объект и добавляет в него свойства точки полилинии
  */
 function extendVector(source, name, value){
-	if(typeof name === 'object'){
-		let map = name;
-		if(keys.every((key)=>(!(key in map) || source[key] === map[key]))){
-			return source;
-		}
-		else{
-			let result = new source.constructor(...source);
-			setprops(result, source);
-			setExistProps(result, map);
-			return result;
-		}
-	}
-	else{
-		if(source[name] === value){
-			return source;
-		}
-		else{
-			let result = new source.constructor(...source);
-			setprops(result, source);
-			setprop(result, name, value);
-
-			return result;
-		}
-		
-	}
+	return mixinVector.doExtend(source, name, value);
 }
 
 module.exports = extendVector;

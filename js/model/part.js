@@ -13,6 +13,10 @@ const LineEdge = require('./edge.js');
 
 const {isosceles, deltoid, isCollinear} = require('../geometry/polyline.js');
 
+/** 
+ * Базовый класс связных компонент и их частей
+ * Связная компонента представляет собой массив точек
+ */
 class ComponentPart extends Array {
 	
 	clone(){
@@ -67,6 +71,9 @@ class ComponentPart extends Array {
 		}
 	}
 	
+	/**
+	 * Обобщает splice на случай выхода за границы массива
+	 */
 	esplice(index, deleteCount, ...items){
 		if(this.closed){
 			return cyclicSplice(this, index, deleteCount, ...items);
@@ -86,6 +93,9 @@ class ComponentPart extends Array {
 		result.ended = items[items.length-1].ended;
 	}
 	
+	/**
+	 * Если компонента не замкнутая, то разворачивает её так, чтобы конечная точка была последней
+	 */
 	controlOrder(){
 		if(!this.closed){
 			if(this[0].ending || this[this.length-1].starting){
@@ -163,6 +173,7 @@ class ComponentPart extends Array {
 
 	/**
 	 * Прокрутка замкнутой ломаной
+	 * @param value : Number - количество шагов, на которые прокручивается ломаная
 	 */
 	rot(value){
 		if(this.closed && value != 0){
@@ -197,6 +208,9 @@ class ComponentPart extends Array {
 		}
 	}
 	
+	/**
+	 * Удаляет вырожденные вершины (такие, для которых смежные отрезки совпадают)
+	 */
 	killPins(){
 		for(let i = 0; i<this.length; ++i){
 			let [A, B, C] = this.subarr(i-1, 3);
@@ -207,6 +221,9 @@ class ComponentPart extends Array {
 		}
 	}
 	
+	/**
+	 * Удлинняет концы разомкнутой ломаной
+	 */
 	expandEnds(ex){
 		
 		if(this.closed){
@@ -240,6 +257,9 @@ class ComponentPart extends Array {
 		return result;
 	}	
 	
+	/**
+	 * Находит наибольший разрешённый радиус скругления для точки
+	 */
 	maxRadius(index, ex, eps){
 		ex = ex || 0;
 		let [A, B, C, D, E] = this.subarr(index-2, 5);

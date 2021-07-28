@@ -7,6 +7,9 @@ const {svgPart,psPart} = require('../render/index.js');
 
 const Part = require('./part.js');
 
+/**
+ * Представляет одноуровневую часть связной компоненты
+ */
 class FlatPart extends Part{
 	
 	renderSVG(width){

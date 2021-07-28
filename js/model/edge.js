@@ -2,6 +2,9 @@ const inspect = Symbol.for('nodejs.util.inspect.custom');
 
 const extendVector = require('./extend-vector.js');
 
+/**
+ * Представляет звено ломаной
+ */
 class LineEdge{
 	/**
 	 *
