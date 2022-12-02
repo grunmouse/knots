@@ -87,8 +87,14 @@ const handlers = {
 	schemes
 }
 
+/**
+ * Созда
+ */
 const annoteSource = source => names => Array.from(names, (name)=>({source, name}));
 
+/**
+ * Добавляет ведущий $ к именам полей объекта
+ */
 function bucksify(obj){
 	let result = {};
 	for(let key in obj){
@@ -101,6 +107,9 @@ function bucksify(obj){
 	return result;
 }
 
+/**
+ * Группирует несколько названий как псевдонимы одного узла
+ */
 async function groupIdentical(arr){
 	let stat = await db.prepare('SELECT identical FROM knot_names WHERE source = $source AND name = $name;');
 	let ids = new Set();
@@ -159,6 +168,9 @@ async function findKnot(index){
 	}
 }
 
+/**
+ * Обрабатывает документ типа schemes
+ */
 async function schemes(doc){
 	let data = doc.toJSON().data;
 	
@@ -175,6 +187,10 @@ async function schemes(doc){
 	}
 }
 
+/**
+ * Обрабатывает документ типа names
+ * Добавляет в базу имена узлов из некоторого источника
+ */
 async function names(doc){
 	const data = doc.toJSON();
 	const source = data.source;
@@ -195,6 +211,9 @@ async function names(doc){
 	
 }
 
+/**
+ * Обрабатывает документ типа identical
+ */
 async function identical(doc){
 	const data = doc.toJSON();
 	if(typeof data.source === 'string'){
@@ -203,6 +222,7 @@ async function identical(doc){
 	}
 	else if(Array.isArray(data.source) && data.mode==='all'){
 		let source = data.source;
+		let exclude = new Set(data.exclude);
 		let cross = await db.all(`
 			SELECT L.name FROM 
 				(SELECT name FROM knot_names WHERE source = "${source[0]}") AS L
@@ -212,6 +232,7 @@ async function identical(doc){
 			;`);
 		
 		for(let item of cross){
+			if(exclude.has(item.name)) continue;
 			await groupIdentical([
 				{name:item.name, source:source[0]},
 				{name:item.name, source:source[1]}
