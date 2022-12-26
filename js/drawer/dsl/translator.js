@@ -27,7 +27,10 @@ const toCommaConcat = (type, data)=>{
 	return data;
 }
 
-
+/**
+ * Упрощает нетерминал, если у него один аргумент
+ * SUMM(ARGLIST(ARG)) => ARGLIST(ARG)
+ */
 const strip = (type, data)=>{
 	//console.log(type, data);
 	if(data.length === 1 && data[0].data && data[0].data.length===1){
@@ -36,6 +39,9 @@ const strip = (type, data)=>{
 	return data;
 }
 
+/**
+ * Если у нетерминала два аргумента, применяет strip ко второму из них
+ */
 const stripTwo = (type, data)=>{
 	//console.log(type, data);
 	if(data.length === 2 && data[1].data && data[1].data.length===1){

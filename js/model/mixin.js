@@ -45,7 +45,7 @@ class Mixin{
 		else{
 			result = callback(a, b);
 		}
-		extendVector(into, name, result);
+		this.doExtend(into, name, result);
 	}	
 	
 	setExistProps(result, map){
