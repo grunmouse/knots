@@ -1,5 +1,11 @@
 /*
-Амфорный стадия 2 через косы
+Амфорный стадия 5 через косы
+
+@param a - знак скользящего простого
+@param b - знак колышки
+@param c - знак выхода рабочей петли
+@param ls - длина петли рабочей
+@param es - длина концов
 */
 
 draw
@@ -9,20 +15,41 @@ braid 2, a
 braid 2, a
 braid 2, a
 savepos B
+braid 3, 2*b
+braid 3, 0
+braid 3, 2*b
+savepos C
+braid 2,-c 
+braid 2,-c 
+savepos F
 o ls
-n 2+wd
+n 5
 w ls
 setdir W()
-savepos C
+braid 2, c
+braid 2, c
+braid 3, -b*2
+braid 3, b 
+braid 3, -b*2
 braid 2,-a 
 braid 2,-a 
 savepos D
 
+w
 w es
 f
 
-move go A + N()
-draw go D + S()
+move go B n 2
+draw n
 
-move go B + N()
-draw go C + S()
+move go C n 2
+draw n
+
+move go F n
+draw n 3
+
+
+move go A + vec(0, 1, 0)
+draw go D + vec(0, -1, 0)
+
+

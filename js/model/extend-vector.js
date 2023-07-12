@@ -9,7 +9,7 @@ const keys = ['radius', 'starting', 'ending', 'skew'];
 const Mixin = require('./mixin.js');
 
 const falsy = ()=>(false);
-const noop = ()=>();
+const noop = ()=>{};
 const mixinVector = new Mixin(
 [
 	['radius', {value:0, merge:Math.min}],

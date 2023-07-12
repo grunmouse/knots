@@ -1,7 +1,14 @@
 /**
+ * Абстрагированная функция поиска непрерывных путей в двухвалентных графах
+ */
+
+/**
  * @typedef NodeID - любое значение, которое может служить ключём
  */
 
+/**
+ * @typedef {Array[2]<NodeID>} Edge  - кортеж (массив) из двух индексов узлов
+ */
 
 /**
  * @typedef {Array<NodeID>} NodePolyline - ломаная, соединяющая узлы в порядке их следования
@@ -31,14 +38,32 @@ function sortLines(edges){
 	let closeLines = [];
 
 	/**
-	 * Соединяет две линии, удаляет из мапы общий узел, если он там был
+	 * Проверяет, не замкнута ли ломаная после добавления узла node
+	 * если замкнута - добавляет её в массив closeLines и удаляет из мапы вторую ссылку на неё,
+	 * если нет - добавляет её в мапу под индексом node
+	 * @param {NodePolyline} line - ломаная, выраженная массивом индексов узлов
+	 * @param {NodeID} node - индекс нового концевого узла
+	 */
+	function renameLine(line, node){
+		if(line[0] === line[line.length-1]){
+			closeLines.push(line);
+			linesMap.delete(line[0]);
+			line.pop();
+		}
+		else if(linesMap.has(node)){
+			concatLines(line, node);
+		}
+		else{
+			linesMap.set(node, line);
+		}
+	}
+	
+	/**
+	 * Соединяет две линии, удаляет из мапы общий узел, если он там был, добавляет полученную линию по ключам её концов
 	 * @param {NodePolyline} line1
 	 * @param {NodeID} node - общий узел
 	 * @param {NodePolyline} line2
-	 * @return {NodeID} - второй узел line2, по нему нужно добавить в мапу line1
-	 * @sideeffect line1 - после работы это объединённая линия
-	 * @sideeffect line2 - после работы измененена, не должна использоваться
-	 * @sideeffect linesMap.delete(node) - общий узел больше не используется для идентификации фрагмента линии
+	 * @return {NodeID} - второй узел line2
 	 */
 	function concatTwoLines(line1, node, line2){
 		if(line1[0]===node){
@@ -55,9 +80,6 @@ function sortLines(edges){
 
 				return n2;
 			}
-			else{
-				throw new Error("Inconsistent line "+node);
-			}
 		}
 		else if(line1[line1.length-1]===node){
 			if(line2[line2.length-1]===node){
@@ -73,52 +95,37 @@ function sortLines(edges){
 				
 				return n2;
 			}
-			else{
-				throw new Error("Inconsistent line "+node);
-			}
 		}
 		else{
 			throw new Error("Inconsistent line "+node);
 		}
 	}
 
-	
-	function convertToClosed(line){
-		closeLines.push(line);
-		linesMap.delete(line[0]);
-		line.pop();
+	/**
+	 * Дополняет линию line1, содержащую узел node 
+	 * узлами из линии line2, находящейся в мапе по ключу node
+	 * удаляет из мапы линию по ключу node - это line2,
+	 * заменяет линию, по ключу с другого конца line2 (это line2) на результат объединения
+	 * @param {NodePolyline} line1
+	 * @param {NodeID} node
+	 */
+	function concatLines(line1, node){
+		let line2 = linesMap.get(node);
+		let n2 = concatTwoLines(line1, node, line2);
+		linesMap.set(n2, line1);
 	}
 	
-
 	/**
-	 * Находит в мапе линию, один из концов которой равен node
+	 * Находит в карте линию, один из концов которой равен n1
 	 *	добавляет с соответствующего конца новый фрагмент line2
-	 *  проверяет, не является ли свободный конец line2 началом ещё одной линии,
-	 *  если да - то добавляет и её
 	 * @param {NodeID} node
 	 * @param {NodePolyline} line2
 	 */
 	function handle(node, line2){
 		let line1 = linesMap.get(node);
-		let tileNode = concatTwoLines(line1, node, line2);
-		
-		if(line1[0] === line[line1.length-1]){
-			//Линия замкнулась после слияния
-			convertToClosed(line1);
-		}
-		else{
-			if(linesMap.has(tileNode)){
-				//Найдено продолжение от нового конца
-				
-				let line3 = linesMap.get(tileNode);
-				tileNode = concatTwoLines(line1, node, line3); //Добавляем к line1 третью часть
-			}
-			
-			linesMap.set(tileNode, line1);
-		}
-
+		let n2 = concatTwoLines(line1, node, line2);
+		renameLine(line1, n2);
 	}
-	
 	
 	//Обходит все рёбра, проверяет есть ли в мапе линии начинающиеся с одного из узлов очередного ребра,
 	//	если да - то дополняет и переименовывает эту линию этим узлом

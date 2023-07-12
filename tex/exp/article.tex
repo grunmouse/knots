@@ -16,10 +16,18 @@
 \begin{document}
 \title{Эксперимент над консолью}
 
-\immediate\write18{node ../../js/draw-knot.js ../../schemes/simple-view.txt 1 result.eps}
+\newcommand{\drawknot}[3]{
+	\immediate\write18{node ../../js/draw-knot.js #1 #2 #3}
+	\includegraphics{#3}
+}
 
-\includegraphics{result.eps}
+%\immediate\write18{node ../../js/draw-knot.js ../../schemes/simple-view.txt 1 result.eps}
+
+%\includegraphics{result.eps}
 
 12345
+
+\drawknot{../../schemes/simple-view.txt}{1}{simple-view.eps}
+\drawknot{../../schemes/eight-view.txt}{1}{eight-view.eps}
 
 \end{document}

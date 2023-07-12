@@ -67,7 +67,7 @@ class Mixin{
 			}
 			else if(!onlyExists){
 				let defaultValue = config.value;
-				if(defaultValue.call){
+				if(defaultValue && defaultValue.call){
 					defaultValue = defaultValue();
 				}
 				this.setprop(result, key, defaultValue);
@@ -106,11 +106,12 @@ class Mixin{
 	doExtend(source, name, value){
 		if(typeof name === 'object'){
 			let map = name;
+			let keys = [...this.descriptor.keys()];
 			if(keys.every((key)=>(!(key in map) || source[key] === map[key]))){
 				return source;
 			}
 			else{
-				let result = doClone(source);
+				let result = this.doClone(source);
 				this.setExistProps(result, map);
 				return result;
 			}
@@ -120,7 +121,7 @@ class Mixin{
 				return source;
 			}
 			else{
-				let result = doClone(source);
+				let result = this.doClone(source);
 				this.setprop(result, name, value);
 
 				return result;

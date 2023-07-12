@@ -21,6 +21,7 @@ async function eval(path, res, req){
 		
 		let fun = mapping[name];
 		
+
 		try{
 			await fun(path, res, req);
 		}
