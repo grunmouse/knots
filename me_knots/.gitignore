@@ -1,0 +1,11 @@
+*.pdf
+*.log
+*.aux
+*.synctex.gz
+*.synctex(busy)
+**/svg-inkscape/
+**/svg-inkscape/*
+**/*-eps-converted-to.pdf
+*.eps
+node_modules/
+node_modules/*

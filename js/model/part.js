@@ -23,6 +23,34 @@ class ComponentPart extends Array {
 		let result = this.slice(0);
 		result.closed = this.closed;
 		result.color = this.color;
+		result.width = this.width;
+		result.type = this.type;
+		
+		return result;
+	}
+	
+	storeToPoint(){
+		this[0].color = this.color;
+		this[0].width = this.width;
+		this[0].type = this.type;
+	}
+	
+	restoreFromPoint(){
+		this.color = undefined;
+		this.width = undefined;
+		this.type = undefined;
+		
+		const doSet = (prop, i)=>{
+			if(!this[prop] && this[0][prop]){
+				this[prop] = this[0][prop];
+			}
+		}
+		
+		for(let i = 0; i<this.length; ++i){
+			doSet('color', i);
+			doSet('width', i);
+			doSet('type', i);
+		}
 	}
 	
 	get closed(){
@@ -252,6 +280,7 @@ class ComponentPart extends Array {
 		//result.ended = this.ended;
 		//result.started = this.started;
 		result.color = this.color;
+		result.width = this.width;
 		result.z = this.z;
 		
 		return result;
@@ -293,6 +322,7 @@ class ComponentPart extends Array {
 		let result = this.map((vector, i)=>extendVector(this[i], 'radius', this.maxRadius(i, ex, eps)));
 
 		result.color = this.color;
+		result.width = this.width;
 		result.z = this.z;
 		
 		return result;

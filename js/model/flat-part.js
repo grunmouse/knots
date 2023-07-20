@@ -13,11 +13,11 @@ const Part = require('./part.js');
 class FlatPart extends Part{
 	
 	renderSVG(width){
-		return svgPart(this, width, 'black');
+		return svgPart(this, this.width || width, 'black');
 	}
 	
 	renderPS(width){
-		return psPart(this, width, '#000000');
+		return psPart(this, this.width || width, '#000000');
 	}
 }
 

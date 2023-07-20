@@ -1,0 +1,35 @@
+/*
+Прямой узел
+*/
+
+draw
+o 2
+u
+no
+d
+o 2
+s 3
+w 2
+u
+nw
+d
+w 2
+f
+
+move
+o 6
+n
+u
+draw
+w 2
+d
+nw
+u
+w 2
+s 3
+o 2
+d
+no
+u
+o 2
+f

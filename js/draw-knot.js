@@ -39,10 +39,14 @@ function drawScheme(filename){
 	}
 }
 
-const [nodepath, sctiprpath, filename, param, into] = process.argv;
+const [nodepath, sctiprpath, filename, param$, into] = process.argv;
+
+let param = param$.split(';').map(str=>(str.split(':')));
+param.forEach((pair)=>{pair[1] = +pair[1];});
+param = Object.fromEntries(param);
 
 const draw = drawScheme(filename);
-let knot = draw({});
+let knot = draw(param);
 
 knot = knot.scale(10, 10);
 

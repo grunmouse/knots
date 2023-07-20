@@ -1,0 +1,38 @@
+/*
+Шкотовый узел
+*/
+
+draw
+o 2
+d
+no
+u
+o 2
+s 3
+d
+w 2
+nw
+u
+w 2
+f
+
+move
+o 6
+n
+d
+draw
+w 2
+u
+sw
+sw
+d
+w
+n 3
+o
+u
+so
+d
+so
+u
+s 2
+f

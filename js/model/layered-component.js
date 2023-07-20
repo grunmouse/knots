@@ -18,16 +18,29 @@ const FlatPart = require('./flat-part.js');
  */
 class LayeredComponent extends Part {
 	
+	/**
+	 * Является ли ребро вертикальным
+	 * @param index - номер первой точки ребра
+	 */
 	isZ(index){
 		let [A, B] = this.subarr(index, 2);
 		return !!A && !!B && A.x === B.x && A.y === B.y && A.z !== B.z;
 	}
 	
+	/**
+	 * Является ли ребро горизонтальным (лежит в плане)
+	 * @param index - номер первой точки ребра
+	 */
 	isXY(index){
 		let [A, B] = this.subarr(index, 2);
 		return !!A && !!B && A.z === B.z;
 	}
 	
+	/**
+	 * Является ли точка вершиной угла на плане
+	 * @param index - номер точки
+	 * @param eps - допуск коллинеарности
+	 */
 	isAngle(index, eps){
 		if(this.isZ(index)){
 			let [A, B, C, D] = this.subarr(index-1, 4);
@@ -43,25 +56,38 @@ class LayeredComponent extends Part {
 		}
 	}
 	
+	/**
+	 * Перемещает вертикальное ребро на полребра вправо, создаёт новое ребро
+	 * @param index - номер первой точки перемещаемого ребра
+	 */
 	moveZtoMiddleRight(index){
 		let [A, B, C] = this.subarr(index, 3);
-		//AB || z
+		//AB || Oz ; BC || xOy
 		let D = B.add(C).div(2);
 		let E = new Vector3(D.x, D.y, A.z);
-		//ED || z
+		//ED || Oz
 		//[A, E, D, C]; 
 		this.esplice(index+1, 1, E, D);
 	}
 	
+	/**
+	 * Перемещает вертикальное ребро на полребра влево, создаёт новое ребро
+	 * @param index - номер первой точки перемещаемого ребра
+	 */
 	moveZtoMiddleLeft(index){
 		let [A, B, C] = this.subarr(index-1, 3);
-		//BC || z
+		//BC || Oz ; AB || xOy
 		let D = B.add(A).div(2);
 		let E = new Vector3(D.x, D.y, C.z);
-		//DE || z
+		//DE || Oz 
 		//[A, D, E, C]
 		this.esplice(index, 1, D, E);
 	}
+
+	/**
+	 * Перемещает вертикальное ребро на ребро влево
+	 * @param index - номер первой точки перемещаемого ребра
+	 */
 	moveZtoLeft(index){
 		let [A, B, C, D] = this.subarr(index-1, 4);
 		//BC || z
@@ -71,6 +97,10 @@ class LayeredComponent extends Part {
 		this.esplice(index, 1, E);
 	}
 
+	/**
+	 * Перемещает вертикальное ребро на ребро вправо
+	 * @param index - номер первой точки перемещаемого ребра
+	 */
 	moveZtoRight(index){
 		let [A, B, C, D] = this.subarr(index-1, 4);
 		//BC || z
@@ -80,6 +110,11 @@ class LayeredComponent extends Part {
 		this.esplice(index+1, 1, E);
 	}
 	
+	/**
+	 * Передвинуть вертикальное ребро в угол
+	 * @param index - первая точка ребра
+	 * @param eps - допуск коллинеарности
+	 */
 	moveZtoAngle(index, eps){
 		if(this.isAngle(index, eps)){
 			return;
@@ -113,15 +148,18 @@ class LayeredComponent extends Part {
 		
 	}
 
+	/**
+	 * Убрать ребро из угла
+	 * @param index - первая точка ребра
+	 * @param eps - допуск коллинеарности
+	 */
 	moveZoutAngle(index, eps){
 		if(!this.isAngle(index, eps)){
 			return ;
 		}
-		//console.log(this.subarr(index, 2));
 
 		let [B, C, D, E] = this.subarr(index-1, 4);
-		//CD || z
-		//console.log([B, C, D, E]);
+
 		if(!B){
 			this.moveZtoMiddleRight(index);
 		}
@@ -149,6 +187,9 @@ class LayeredComponent extends Part {
 		return this;
 	}
 
+	/**
+	 * Объёдинить коллинеарные рёбра
+	 */
 	joinCollinears(eps){
 		let i = this.length;
 		for(;i--;){
@@ -159,6 +200,9 @@ class LayeredComponent extends Part {
 		return this;
 	}
 	
+	/**
+	 * Передвинуть все вертикальные рёбра в углы
+	 */
 	moveAllZtoAngle(eps){
 		let i = this.length;
 		for(;i--;){
@@ -169,6 +213,9 @@ class LayeredComponent extends Part {
 		return this;
 	}
 	
+	/**
+	 * Передвинуть все ввертикальные рёбра из углов
+	 */
 	moveAllZoutAngle(eps){
 		let i = this.length;
 		for(;i--;){
@@ -183,6 +230,7 @@ class LayeredComponent extends Part {
 	splitByLevels(){
 		const parts = [];
 		const color = this.color;
+		const width = this.width;
 		
 		let part, level;
 		
@@ -191,6 +239,7 @@ class LayeredComponent extends Part {
 				level = point.z;
 				part = new FlatPart();
 				part.color = color;
+				part.width = width;
 				part.z = level;
 				parts.push(part);
 			}
@@ -218,6 +267,9 @@ class LayeredComponent extends Part {
 		return parts;
 	}
 	
+	/**
+	 * Вертикальные рёбра
+	 */
 	hedges(){
 		return this.edges().filter(({A, B})=>(A.z === B.z));
 	}
@@ -228,7 +280,12 @@ class LayeredComponent extends Part {
 	scale(sxy, sz){
 		sxy = sxy || 1;
 		sz = sz || 1;
-		return this.map((vec)=>extendVector(new Vector3(vec.x*sxy, vec.y*sxy, vec.z*sz), vec));
+		let result = this.map((vec)=>extendVector(new Vector3(vec.x*sxy, vec.y*sxy, vec.z*sz), vec));
+		result.type = this.type;
+		result.color = this.color;
+		result.width = this.width;
+		
+		return result;
 	}
 	
 	/**

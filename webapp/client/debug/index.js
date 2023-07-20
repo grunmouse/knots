@@ -78,8 +78,9 @@ const vm = new Vue({
 				console.log(e);
 			}
 			let knot = new LevelsDiagram(env.components);
-			
-			knot = knot.assemblyConnectedComponents();			
+			knot.components.forEach(cmp=>cmp.storeToPoint());
+			knot = knot.assemblyConnectedComponents();		
+			knot.components.forEach(cmp=>cmp.restoreFromPoint());			
 			knot.addSkewPoints();
 			knot.moveAllZoutAngle();
 			knot.moveZoutEnds();
@@ -89,6 +90,12 @@ const vm = new Vue({
 			knot.components.forEach((cmp, i)=>{
 				if(!cmp.color){
 					cmp.color = colors[i];
+				}
+				switch(cmp.type){
+					case "bar":
+						cmp.width = 8;
+						cmp.color = "gray";
+					default:
 				}
 			});
 			

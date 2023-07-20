@@ -1,0 +1,25 @@
+\documentclass[a4paper]{scrartcl}
+\usepackage{steal}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{parcolumns}
+\usepackage{array} 
+\usepackage{tabularx}
+\usepackage{comment}
+\steal{../../tex-configs/}{packages}
+%\steal{../../tex-lib/}{standart}
+
+
+\begin{document}
+\title{Мои узлы}
+
+\newcommand{\drawknot}[3]{
+	\immediate\write18{node ../js/draw-knot.js #1 #2 #3}
+	\includegraphics{#3}
+}
+
+
+\stealcurrent
+
+\end{document}

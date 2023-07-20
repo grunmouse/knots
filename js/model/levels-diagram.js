@@ -16,6 +16,7 @@ const {
 const {
 	mapOfVectors,
 	convertToKeys,
+	getKey,
 	convertToVectors
 } = require('./vector-map.js');
 const extendVector = require('./extend-vector.js');
@@ -40,7 +41,7 @@ class LevelsDiagram{
 	
 	constructor(components){
 		components = components || [];
-		this.components = Array.from(components, (cmp)=>(LayeredComponent.from(cmp)));
+		this.components = Array.from(components, (cmp)=>(cmp instanceof LayeredComponent ? cmp.clone() : LayeredComponent.from(cmp)));
 	}
 	
 	mapmap(callback){
@@ -143,22 +144,75 @@ class LevelsDiagram{
 		let points2 = points.map(p=>p.cut(2));
 		let keys = convertToKeys(points2);
 		let map = new MapOfSet();
-		keys.forEach((key, i)=>{
-			map.add(key, points[i]);
+		
+		this.components.forEach((component, cmpIndex)=>{
+			component.forEach((point, pointIndex)=>{
+				let key = getKey(point.cut(2));
+				map.add(key, {point, cmpIndex, pointIndex});
+			});
 		});
+		
+		const hasEdge = (recA, recB)=>{
+			if(recA.cmpIndex != recB.cmpIndex) return false;
+			let indexDist = Math.abs(recA.pointIndex - recB.pointIndex);
+			let component = this.components[recA.cmpIndex];
+			if(indexDist === 1 ||indexDist === component.length-1){
+				return component.hasEdge(recA.point, recB.point);
+			}
+			else{
+				return false;
+			}
+		};
+		
+		const setAnnote = (A, B)=>{
+			A.skew = Math.sign(A.z - B.z);
+			B.skew = -A.skew;
+			A.skewlink = B;
+			B.skewlink = A;
+		};
+		
+
 		for(let [key, set] of map.entries()){
 			if(set.size === 2){
-				if(this.hasEdge(...set)){
+				if(hasEdge(...set)){
 				}
 				else{
-					let [A, B] = [...set];
-					A.skew = Math.sign(A.z - B.z);
-					B.skew = -A.skew;
-					A.skewlink = B;
-					B.skewlink = A;
+					let [A, B] = [...set].map(record=>record.point);
+					setAnnote(A, B);
 				}
 			}
-			else if(set.size > 2){
+			else if(set.size === 3){
+				let [recA, recB, recC] = [...set].sort((a, b)=>(a.point.z - b.point.z));
+				if(hasEdge(recA, recB)){
+					if(hasEdge(recB, recC)){
+					}
+					else{
+						setAnnote(recB.point, recC.point);
+					}
+				}
+				else if(hasEdge(recB, recC)){
+					setAnnote(recA.point, recB.point);
+				}
+				else{
+					console.log(set);
+					throw new Error('Тройная точка ' + [...set]);
+				}
+			}
+			else if(set.size === 4){
+				let [recA, recB, recC, recD] = [...set].sort((a, b)=>(a.point.z - b.point.z));
+				if(hasEdge(recA, recB) && hasEdge(recC, recD)){
+					if(hasEdge(recB, recC)){
+					}
+					else{
+						setAnnote(recB.point, recC.point);
+					}
+				}
+				else{
+					console.log(set);
+					throw new Error('Тройная точка ' + [...set]);
+				}
+			}
+			else if(set.size > 4){
 				console.log(set);
 				throw new Error('Тройная точка ' + [...set]);
 			}
@@ -439,6 +493,9 @@ class LevelsDiagram{
 		return result;
 	}
 	
+	/**
+	 * Строит полином Кауфмана
+	 */
 	polynomeKaufman(){
 		let pairs = this.skewPairs();
 		let size = 2n ** BigInt(pairs.lenght);

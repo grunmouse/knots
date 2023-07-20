@@ -12,11 +12,13 @@ const lib = {
 		log(...arg){
 			console.log(...arg);
 		},
-		draw(){
+		draw(type){
 			this.drawing = true;
+			this.drawtype = type;
 		},
 		move(){
 			this.drawing = false;
+			this.drawtype = undefined;
 		},
 		u(z){
 			if(z === 0){
@@ -73,6 +75,9 @@ const lib = {
 		 * com - номер пересечения
 		 */
 		braid(size, com){
+			this._append = false;
+			this.drawtype = undefined
+
 			let I = this.dir;
 			let J = new Vector(-I.y, I.x, 0);
 			let start = [this.pos], fin = [];
@@ -99,8 +104,8 @@ const lib = {
 				}
 			}
 			if(com !== 0){
-				this.components.push([start[up], fin[down]]);
-				this.components.push([
+				this.addComponent([start[up], fin[down]]);
+				this.addComponent([
 					start[down], 
 					start[down].add(new Vector3(0, 0, -1)),
 					fin[up].add(new Vector3(0, 0, -1)),
@@ -108,7 +113,6 @@ const lib = {
 				]);
 			}
 			this.pos = this.pos.add(I);
-			this._append = false;
 		}
 	},
 	fun:{
@@ -124,6 +128,9 @@ const lib = {
 		orto(vec){
 			let {x, y} = vec;
 			return new vec.constructor(-y, x, 0);
+		},
+		bar(){
+			return "bar"; //Палка
 		}
 	}
 };
@@ -162,6 +169,15 @@ class MultiLevelDrawer extends DrawerBase(lib){
 		return this.pos.z;
 	}
 	
+	addComponent(points){
+		let component = new LayeredComponent(...points);
+		if(this.drawtype){
+			component.type = this.drawtype;
+		}
+		this.components.push(component);
+		return component;
+	}
+	
 	lineto(pos){
 		if(!pos instanceof Vector3){
 			throw new Error('Incorrect class!');
@@ -171,7 +187,7 @@ class MultiLevelDrawer extends DrawerBase(lib){
 			this.pos = pos;
 		}
 		else{
-			this.components.push(new LayeredComponent(this.pos, pos));
+			this.addComponent([this.pos, pos]);
 			this._append = true;
 			this.pos = pos;
 		}
